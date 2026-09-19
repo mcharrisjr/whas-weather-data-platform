@@ -1,8 +1,8 @@
-name: 'whas_weather_data_platform'
-version: '1.0.0'
+name: whas_weather_data_platform
+version: 1.0.0
 config-version: 2
 
-profile: 'whas_weather_data_platform'
+profile: whas_weather_data_platform
 
 model-paths:
   - models
@@ -13,21 +13,19 @@ models:
   whas_weather_data_platform:
 
     staging:
-      +schema: 'weather_staging'
+      +schema: weather_staging
       +materialized: view
-      
-      daily_forecast:
-        +tags:
-          - 'daily_forecast'
 
-      hourly_forecast:
-        +tags:
-          - 'hourly_forecast'
-
-      observation:
-        +tags:
-          - observation
+    intermediate:
+      +schema: weather_intermediate
+      +materialized: table
+      +table_type: iceberg
+      +s3_data_dir: "s3://{{ env_var('WHAS_WEATHER_INTERMEDIATE_S3_BUCKET') }}/"
+      +s3_data_naming: schema_table
 
     marts:
-      +schema: 'weather_mart'
+      +schema: weather_mart
       +materialized: table
+      +table_type: iceberg
+      +s3_data_dir: "s3://{{ env_var('WHAS_WEATHER_MART_S3_BUCKET') }}/"
+      +s3_data_naming: schema_table
