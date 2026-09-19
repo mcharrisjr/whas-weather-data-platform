@@ -1,0 +1,11 @@
+whas_weather_data_platform:
+  target: dev
+
+  outputs:
+    dev:
+      type: athena
+      region_name: 'us-east-1'
+      database: awsdatacatalog
+      schema: 'weather_staging'
+      s3_staging_dir: 's3://whas-weather-data-platform-athena-results/'
+      threads: 4

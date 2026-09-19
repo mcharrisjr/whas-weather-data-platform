@@ -1,0 +1,2 @@
+class MissingHTMLElement(Exception):
+    pass

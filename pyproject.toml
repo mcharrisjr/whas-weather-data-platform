@@ -1,0 +1,57 @@
+[project]
+name = "whas-weather-data-platform"
+version = "0.1.0"
+description = "WHAS weather data platform."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[build-system]
+requires = ["uv_build>=0.12.6,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "poethepoet>=0.48.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.16.7",
+    "sqlfluff>=4.3.0",
+    "ty>=0.0.80",
+]
+
+scrape = [
+    "aiohttp>=3.14.3",
+    "beautifulsoup4>=4.15.0",
+    "boto3>=1.43.94",
+    "pydantic>=2.13.5",
+    "types-boto3[s3]>=1.43.97",
+]
+
+dbt = [
+    "dbt-athena>=1.11.1",
+    "dbt-core==1.12.4",
+]
+
+[tool.sqlfluff.core]
+dialect = "hive"
+templater = "jinja"
+
+[tool.sqlfluff.templater.jinja]
+apply_dbt_builtins = true   
+
+[tool.poe]
+shell_interpreter = "bash"
+
+[tool.poe.tasks]
+test-unit = "pytest -vv --show-capture=no --disable-pytest-warnings tests/unit"
+test-integration = "pytest -vv --show-capture=no --disable-pytest-warnings tests/integration"
+coverage = "pytest --cov=src --cov-config=.coveragerc --cov-report term-missing --cov-fail-under=80 tests/unit"
+py-check-lint = "ruff check"
+py-lint = "ruff check --fix"
+py-check-format = "ruff format --diff"
+py-format = "ruff format"
+py-check-types = "ty check"
+sql-check-lint = "sqlfluff lint ddl/ dbt/models/"
+sql-lint = "sqlfluff fix ddl/ dbt/models/ --force"
+    
