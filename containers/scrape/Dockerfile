@@ -29,4 +29,5 @@ COPY --from=builder /app /app
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-CMD ["python", "-m", "whas_weather_data_platform"]
+ENTRYPOINT ["python", "-m", "whas_weather_data_platform"]
+CMD ["--help"]
