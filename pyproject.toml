@@ -53,5 +53,5 @@ py-check-format = "ruff format --diff"
 py-format = "ruff format"
 py-check-types = "ty check"
 sql-check-lint = "sqlfluff lint ddl/ dbt/models/"
-sql-lint = "sqlfluff fix ddl/ dbt/models/ --force"
+sql-lint = "sqlfluff fix ddl/ dbt/models/"
     

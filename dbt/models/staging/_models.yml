@@ -1,0 +1,103 @@
+version: 2
+
+models:
+  - name: stg_forecast_daily
+    description: Daily weather forecasts.
+    columns:
+      - name: forecast_date
+        description: Forecast date.
+        tests:
+          - not_null
+      - name: high_temperature_f
+        description: High temperature in Fahrenheit.
+        tests:
+          - not_null
+      - name: low_temperature_f
+        description: Low temperature in Fahrenheit.
+        tests:
+          - not_null
+      - name: chance_of_precipitation
+        description: Chance of precipitation.
+        tests:
+          - not_null
+      - name: wind_speed_mph
+        description: Wind speed in miles per hour (MPH).
+        tests:
+          - not_null
+      - name: wind_direction
+        description: Wind direction.
+        tests:
+          - not_null
+      - name: scraped_at
+        description: Scraped at datetime.
+        tests:
+          - not_null
+
+  - name: stg_forecast_hourly
+    description: Hourly weather forecasts.
+    columns:
+      - name: forecast_for
+        description: Forecasted for datetime.
+        tests:
+          - not_null
+      - name: temperature_f
+        description: Temperature in Fahrenheit.
+        tests:
+          - not_null
+      - name: chance_of_precipitation
+        description: Chance of precipitation.
+        tests:
+          - not_null
+      - name: wind_speed_mph
+        description: Wind speed in miles per hour (MPH).
+        tests:
+          - not_null
+      - name: wind_direction
+        description: Wind direction.
+        tests:
+          - not_null
+      - name: scraped_at
+        description: Scraped at datetime.
+        tests:
+          - not_null
+
+  - name: stg_observation_hourly
+    description: Hourly weather observations.
+    columns:
+      - name: observed_at
+        description: Observed at datetime.
+        tests:
+          - unique
+          - not_null
+      - name: temperature_f
+        description: Temperature in Fahrenheit.
+        tests:
+          - not_null
+      - name: feels_like_f
+        description: Feels like temperature in Fahrenheit.
+        tests:
+          - not_null
+      - name: humidity
+        description: Humidity.
+        tests:
+          - not_null
+      - name: chance_of_precipitation
+        description: Chance of precipitation.
+        tests:
+          - not_null
+      - name: wind_speed_mph
+        description: Wind speed in miles per hour (MPH).
+        tests:
+          - not_null
+      - name: wind_direction
+        description: Wind direction.
+        tests:
+          - not_null
+      - name: condition_
+        description: Weather condition.
+        tests:
+          - not_null
+      - name: scraped_at
+        description: Scraped at datetime.
+        tests:
+          - not_null 

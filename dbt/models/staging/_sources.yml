@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: weather_raw
+    schema: weather_raw
+    tables:
+      - name: forecast_daily
+      - name: forecast_hourly
+      - name: observation_hourly

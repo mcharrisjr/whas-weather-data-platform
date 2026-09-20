@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: mart_forecast_accuracy_daily
+    description: Daily weather forecast accuracy.
+    columns:
+      - name: forecast_date
+        description: Forecast date.
+        tests:
+          - not_null
+      - name: bias_high_temperature_f
+        description: Bias of high temperature forecast in Fahrenheit.
+        tests:
+          - not_null
+      - name: bias_low_temperature_f
+        description: Bias of low temperature forecast in Fahrenheit.
+        tests:
+          - not_null
+      - name: forecast_horizon_days
+        description: Forecast horizon in days.
+        tests:
+          - not_null
+
+  - name: mart_forecast_accuracy_hourly
+    description: Hourly weather forecast accuracy.
+    columns:
+      - name: forecasted_at
+        description: Forecasted at datetime.
+        tests:
+          - not_null
+      - name: bias_temperature_f
+        description: Bias of temperature forecast in Fahrenheit.
+        tests:
+          - not_null
+      - name: forecast_horizon_hours
+        description: Forecast horizon in hours.
+        tests:
+          - not_null
