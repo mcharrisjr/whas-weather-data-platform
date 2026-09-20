@@ -6,7 +6,6 @@
 }}
 
 SELECT
-    DATE_TRUNC('hour', observed_at) AS observed_at,
     temperature_f,
     feels_like_f,
     humidity,
@@ -14,7 +13,8 @@ SELECT
     wind_speed_mph,
     wind_direction,
     condition_,
-    scraped_at
+    scraped_at,
+    DATE_TRUNC('hour', observed_at) AS observed_at
 FROM {{ ref('stg_observation_hourly') }}
 
 {% if is_incremental() %}

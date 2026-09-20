@@ -1,6 +1,8 @@
 SELECT
     observation_date,
-    MAX(temperature_f) OVER (PARTITION BY observation_date) AS high_temperature_f,
+    MAX(temperature_f)
+        OVER (PARTITION BY observation_date)
+        AS high_temperature_f,
     MIN(temperature_f) OVER (PARTITION BY observation_date) AS low_temperature_f
 FROM (
     SELECT
