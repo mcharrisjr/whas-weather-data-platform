@@ -34,10 +34,11 @@ class S3Client:
         """
         scraped_dates = {forecast.scraped_at.date() for forecast in weather_forecasts}
         (scraped_date,) = scraped_dates
-ndjson = "\n".join(forecast.model_dump_json() for forecast in weather_forecasts)
+
+        ndjson = "\n".join(forecast.model_dump_json() for forecast in weather_forecasts)
 
         s3_object_key = (
-            f"{os.environ["WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE"]}_{forecast_frequency}_{WeatherDataType.FORECAST}/"
+            f"{os.environ['WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE']}_{forecast_frequency}_{WeatherDataType.FORECAST}/"
             f"scraped_date={scraped_date.isoformat()}/"
             f"{WeatherDataType.FORECAST}.ndjson"
         )
@@ -66,7 +67,7 @@ ndjson = "\n".join(forecast.model_dump_json() for forecast in weather_forecasts)
         ndjson = weather_observation.model_dump_json()
 
         s3_object_key = (
-            f"{os.environ["WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE"]}_{observation_frequency}_{WeatherDataType.OBSERVATION}/"
+            f"{os.environ['WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE']}_{observation_frequency}_{WeatherDataType.OBSERVATION}/"
             f"observed_date={observed_date.isoformat()}/"
             f"{WeatherDataType.OBSERVATION}.ndjson"
         )
