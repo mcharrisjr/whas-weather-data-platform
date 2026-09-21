@@ -1,6 +1,6 @@
 from whas_weather_data_platform.core.enums import WeatherDataFrequency
 from whas_weather_data_platform.core.s3_client import S3Client
-from whas_weather_data_platform.observation_hourly.parse import (
+from whas_weather_data_platform.hourly_observation.parse import (
     parse_hourly_weather_observation,
 )
 
