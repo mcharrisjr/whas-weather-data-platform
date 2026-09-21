@@ -1,17 +1,17 @@
-resource "aws_s3_bucket" "weather_raw" {
-  bucket           = "${local.project}-raw-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.region}-an"
+resource "aws_s3_bucket" "raw" {
+  bucket           = local.raw_bucket_nae
   bucket_namespace = "account-regional"
 }
 
-resource "aws_s3_bucket_versioning" "weather_raw" {
-  bucket = aws_s3_bucket.weather_raw.id
+resource "aws_s3_bucket_versioning" "raw" {
+  bucket = aws_s3_bucket.raw.id
   versioning_configuration {
     status = "Enabled"
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "weather_raw" {
-  bucket = aws_s3_bucket.weather_raw.id
+resource "aws_s3_bucket_public_access_block" "raw" {
+  bucket = aws_s3_bucket.raw.id
 
   block_public_acls       = true
   block_public_policy     = true
@@ -19,20 +19,20 @@ resource "aws_s3_bucket_public_access_block" "weather_raw" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket" "weather_intermediate" {
-  bucket           = "${local.project}-intermediate-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.region}-an"
+resource "aws_s3_bucket" "intermediate" {
+  bucket           = local.intermediate_bucket_name
   bucket_namespace = "account-regional"
 }
 
-resource "aws_s3_bucket_versioning" "weather_intermediate" {
-  bucket = aws_s3_bucket.weather_intermediate.id
+resource "aws_s3_bucket_versioning" "intermediate" {
+  bucket = aws_s3_bucket.intermediate.id
   versioning_configuration {
     status = "Enabled"
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "weather_intermediate" {
-  bucket = aws_s3_bucket.weather_intermediate.id
+resource "aws_s3_bucket_public_access_block" "intermediate" {
+  bucket = aws_s3_bucket.intermediate.id
 
   block_public_acls       = true
   block_public_policy     = true
@@ -40,20 +40,20 @@ resource "aws_s3_bucket_public_access_block" "weather_intermediate" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket" "weather_mart" {
-  bucket           = "${local.project}-mart-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.region}-an"
+resource "aws_s3_bucket" "mart" {
+  bucket           = local.mart_bucket_name
   bucket_namespace = "account-regional"
 }
 
-resource "aws_s3_bucket_versioning" "weather_mart" {
-  bucket = aws_s3_bucket.weather_mart.id
+resource "aws_s3_bucket_versioning" "mart" {
+  bucket = aws_s3_bucket.mart.id
   versioning_configuration {
     status = "Enabled"
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "weather_mart" {
-  bucket = aws_s3_bucket.weather_mart.id
+resource "aws_s3_bucket_public_access_block" "mart" {
+  bucket = aws_s3_bucket.mart.id
 
   block_public_acls       = true
   block_public_policy     = true
@@ -61,13 +61,13 @@ resource "aws_s3_bucket_public_access_block" "weather_mart" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket" "athena_staging" {
-  bucket           = "${local.project}-athena-query-results-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.region}-an"
+resource "aws_s3_bucket" "athena_query_results" {
+  bucket           = local.athena_query_results_bucket_name
   bucket_namespace = "account-regional"
 }
 
-resource "aws_s3_bucket_public_access_block" "athena_staging" {
-  bucket = aws_s3_bucket.athena_staging.id
+resource "aws_s3_bucket_public_access_block" "athena_query_results" {
+  bucket = aws_s3_bucket.athena_query_results.id
 
   block_public_acls       = true
   block_public_policy     = true
@@ -75,14 +75,14 @@ resource "aws_s3_bucket_public_access_block" "athena_staging" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket_lifecycle_configuration" "athena_staging" {
-  bucket = aws_s3_bucket.athena_staging.bucket
+resource "aws_s3_bucket_lifecycle_configuration" "athena_query_results" {
+  bucket = aws_s3_bucket.athena_query_results.bucket
 
   rule {
     id = "one-day-expiration"
 
     expiration {
-      days = 1
+      days = 7
     }
 
     status = "Enabled"
