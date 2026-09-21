@@ -13,11 +13,11 @@ models:
   whas_weather_data_platform:
 
     staging:
-      +schema: weather_staging
+      +schema: whas_weather_data_platform_staging
       +materialized: view
 
     intermediate:
-      +schema: weather_intermediate
+      +schema: whas_weather_data_platform_intermediate
       +materialized: table
       +table_type: iceberg
       +format: parquet
@@ -25,7 +25,7 @@ models:
       +s3_data_naming: schema_table
 
     marts:
-      +schema: weather_mart
+      +schema: whas_weather_data_platform_mart
       +materialized: table
       +table_type: iceberg
       +format: parquet

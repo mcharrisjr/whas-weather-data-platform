@@ -9,7 +9,7 @@ WITH ranked_forecast_hourly AS (
             PARTITION BY forecasted_for
             ORDER BY scraped_at DESC
         ) AS rn
-    FROM {{ ref('stg_forecast_hourly') }}
+    FROM {{ ref('stg_hourly_forecast') }}
 )
 
 SELECT

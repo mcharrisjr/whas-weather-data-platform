@@ -10,7 +10,7 @@ WITH ranked_forecast_daily AS (
             PARTITION BY forecast_date
             ORDER BY scraped_at DESC
         ) AS rn
-    FROM {{ ref('stg_forecast_daily') }}
+    FROM {{ ref('stg_daily_forecast') }}
 )
 
 SELECT

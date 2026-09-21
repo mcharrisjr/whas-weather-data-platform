@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_forecast_daily
+  - name: stg_daily_forecast
     description: Daily weather forecasts.
     columns:
       - name: forecast_date
@@ -33,7 +33,7 @@ models:
         tests:
           - not_null
 
-  - name: stg_forecast_hourly
+  - name: stg_hourly_forecast
     description: Hourly weather forecasts.
     columns:
       - name: forecast_for
@@ -61,7 +61,7 @@ models:
         tests:
           - not_null
 
-  - name: stg_observation_hourly
+  - name: stg_hourly_observation
     description: Hourly weather observations.
     columns:
       - name: observed_at

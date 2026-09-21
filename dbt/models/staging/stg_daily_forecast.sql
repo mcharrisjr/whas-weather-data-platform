@@ -6,4 +6,4 @@ SELECT
     CAST(wind_speed_mph AS TINYINT) AS wind_speed_mph,
     wind_direction,
     CAST(scraped_at AS TIMESTAMP) AS scraped_at
-FROM {{ source('weather_raw', 'forecast_daily') }}
+FROM {{ source('raw', 'daily_forecast') }}

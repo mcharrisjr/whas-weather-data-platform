@@ -8,5 +8,5 @@ FROM (
     SELECT
         CAST(observed_at AS DATE) AS observation_date,
         temperature_f
-    FROM {{ ref('stg_observation_hourly') }}
+    FROM {{ ref('stg_hourly_observation') }}
 )

@@ -6,6 +6,6 @@ whas_weather_data_platform:
       type: athena
       region_name: "{{ env_var('AWS_REGION') }}"
       database: awsdatacatalog
-      schema: weather_mart
+      schema: whas_weather_data_platform_mart
       s3_staging_dir: "s3://{{ env_var('WHAS_WEATHER_ATHENA_QUERY_RESULTS_S3_BUCKET') }}/"
       threads: 4

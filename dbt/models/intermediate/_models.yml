@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: int_latest_forecast_daily
+  - name: int_latest_daily_forecast
     description: Latest daily weather forecasts.
     columns:
       - name: forecast_date
@@ -29,7 +29,7 @@ models:
         tests:
           - not_null
 
-  - name: int_latest_forecast_hourly
+  - name: int_latest_hourly_forecast
     description: Latest hourly weather forecasts.
     columns:
       - name: forecasted_for
@@ -53,7 +53,7 @@ models:
         tests:
           - not_null
 
-  - name: int_observation_daily
+  - name: int_daily_observation
     description: Daily weather observations.
     columns:
       - name: observation_date
@@ -70,7 +70,7 @@ models:
         tests:
           - not_null
 
-  - name: int_observation_hourly
+  - name: int_hourly_observation
     description: Hourly weather observations.
     columns:
       - name: observed_at
