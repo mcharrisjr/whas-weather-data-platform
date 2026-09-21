@@ -178,7 +178,7 @@ resource "aws_glue_catalog_table" "raw_hourly_observation" {
   }
 
   parition_keys {
-    name = "scraped_date"
+    name = "observed_date"
     type = "date"
   }
 }
