@@ -2,6 +2,10 @@ resource "aws_glue_catalog_database" "raw" {
   name = local.raw_database_name
 }
 
+resource "aws_glue_catalog_database" "staging" {
+  name = local.staging_database_name
+}
+
 resource "aws_glue_catalog_database" "intermediate" {
   name = local.intermediate_database_name
 }
