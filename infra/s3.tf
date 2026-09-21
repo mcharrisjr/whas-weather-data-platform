@@ -1,3 +1,11 @@
+locals {
+  raw_bucket_name          = "${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an"
+  intermediate_bucket_name = "${var.project_name}-intermediate-${local.aws_account_id}-${local.aws_region}-an"
+  mart_bucket_name         = "${var.project_name}-mart-${local.aws_account_id}-${local.aws_region}-an"
+
+  athena_query_results_bucket_name = "${var.project_name}-athena-query-results-${local.aws_account_id}-${local.aws_region}-an"
+}
+
 resource "aws_s3_bucket" "raw" {
   bucket           = local.raw_bucket_name
   bucket_namespace = "account-regional"

@@ -1,6 +1,6 @@
 locals {
-  glue_arn_prefix = "arn:aws:glue:${local.aws_region}:${local.aws_account_id}"
-  ecs_task_execution_role_arn = "arn:aws:iam:aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  glue_arn_prefix             = "arn:aws:glue:${local.aws_region}:${local.aws_account_id}"
+  ecs_task_execution_role_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 data "aws_iam_policy_document" "ecs_task_trust" {
@@ -22,7 +22,7 @@ resource "aws_iam_role" "ecs_task_scrape" {
 
 data "aws_iam_policy_document" "raw_bucket_write" {
   statement {
-    actions   = ["s3:PutObject"]
+    actions = ["s3:PutObject"]
     resources = [
       "${aws_s3_bucket.raw.arn}/${local.raw_database_name}_${local.raw_hourly_forecast_table_name}/*",
       "${aws_s3_bucket.raw.arn}/${local.raw_database_name}_${local.raw_daily_forecast_table_name}/*",
@@ -37,7 +37,8 @@ resource "aws_iam_policy" "raw_bucket_write" {
 }
 
 resource "aws_iam_policy_attachment" "raw_bucket_write" {
-  role = aws_iam_role.ecs_task_scrape.name
+  name       = "${var.project_name}-raw-bucket-write-policy-attachment"
+  roles      = [aws_iam_role.ecs_task_scrape.name]
   policy_arn = aws_iam_policy.raw_bucket_write.arn
 }
 
@@ -103,21 +104,109 @@ data "aws_iam_policy_document" "dbt_build" {
 }
 
 resource "aws_iam_policy" "dbt_build" {
-  name = "${var.project_name}-dbt-build-policy"
+  name   = "${var.project_name}-dbt-build-policy"
   policy = data.aws_iam_policy_document.dbt_build.json
 }
 
 resource "aws_iam_policy_attachment" "dbt_build" {
-  role = aws_iam_role.ecs_task_dbt_build.name
+  name       = "${var.project_name}-dbt-build-policy-attachment"
+  roles      = [aws_iam_role.ecs_task_dbt_build.name]
   policy_arn = aws_iam_policy.dbt_build.arn
 }
 
 resource "aws_iam_role" "ecs_task_execution" {
-  name = "${var.project_name}-ecs-task-execution-role"
+  name               = "${var.project_name}-ecs-task-execution-role"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_trust.json
 }
 
 resource "aws_iam_policy_attachment" "ecs_task_execution" {
-  role = aws_iam_role.ecs_task_execution.name
+  name       = "${var.project_name}-ecs-task-execution-policy-attachment"
+  roles      = [aws_iam_role.ecs_task_execution.name]
   policy_arn = local.ecs_task_execution_role_arn
+}
+
+data "aws_iam_policy_document" "eventbridge_scheduler_trust" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["scheduler.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "eventbridge_scheduler" {
+  name               = "${var.project_name}-eventbridge-scheduler-role"
+  assume_role_policy = data.aws_iam_policy_document.eventbridge_scheduler_trust.json
+}
+
+data "aws_iam_policy_document" "eventbridge_scheduler" {
+  statement {
+    actions = ["states:StartExecution"]
+    resources = [
+      aws_sfn_state_machine.hourly.arn,
+      aws_sfn_state_machine.daily.arn,
+    ]
+  }
+}
+
+resource "aws_iam_policy" "eventbridge_scheduler" {
+  name   = "${var.project_name}-eventbridge-scheduler-policy"
+  policy = data.aws_iam_policy_document.eventbridge_scheduler.json
+}
+
+resource "aws_iam_policy_attachment" "eventbridge_scheduler" {
+  name       = "${var.project_name}-eventbridge-scheduler-policy-attachment"
+  roles      = [aws_iam_role.eventbridge_scheduler.name]
+  policy_arn = aws_iam_policy.eventbridge_scheduler.arn
+}
+
+data "aws_iam_policy_document" "step_function_trust" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["states.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "step_function" {
+  name               = "${var.project_name}-step-function"
+  assume_role_policy = data.aws_iam_policy_document.step_function_trust.json
+}
+
+data "aws_iam_policy_document" "step_function" {
+  statement {
+    actions = [
+      "ecs:RunTask",
+      "ecs:StopTask",
+      "ecs:DescribeTasks",
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    actions = ["iam:PassRole"]
+    resources = [
+      aws_iam_role.ecs_task_execution.arn,
+      aws_iam_role.ecs_task_scrape.arn,
+      aws_iam_role.ecs_task_dbt_build.arn,
+    ]
+  }
+}
+
+resource "aws_iam_policy" "step_function" {
+  name   = "${var.project_name}-step-function-policy"
+  policy = data.aws_iam_policy_document.step_function.json
+}
+
+resource "aws_iam_policy_attachment" "step_function" {
+  name       = "${var.project_name}-step-function-policy-attachment"
+  roles      = [aws_iam_role.step_function.name]
+  policy_arn = aws_iam_policy.step_function.arn
 }

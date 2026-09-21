@@ -59,7 +59,7 @@ resource "aws_glue_catalog_table" "raw_hourly_forecast" {
     }
   }
 
-  parition_keys {
+  partition_keys {
     name = "scraped_date"
     type = "date"
   }
@@ -115,7 +115,7 @@ resource "aws_glue_catalog_table" "raw_daily_forecast" {
     }
   }
 
-  parition_keys {
+  partition_keys {
     name = "scraped_date"
     type = "date"
   }
@@ -181,7 +181,7 @@ resource "aws_glue_catalog_table" "raw_hourly_observation" {
     }
   }
 
-  parition_keys {
+  partition_keys {
     name = "observed_date"
     type = "date"
   }

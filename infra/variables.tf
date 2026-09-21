@@ -3,3 +3,9 @@ variable "project_name" {
   type        = string
   default     = "whas-weather-data-platform"
 }
+
+variable "image_tag" {
+  description = "ECR image tag."
+  type        = string
+  default     = "bootstrap"
+}
