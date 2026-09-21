@@ -1,5 +1,5 @@
-resource "aws_ecr_repository" "weather_scrape" {
-  name                 = "${local.project}/scrape"
+resource "aws_ecr_repository" "scrape" {
+  name                 = local.scrape_ecr_repository_name
   image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
@@ -7,8 +7,8 @@ resource "aws_ecr_repository" "weather_scrape" {
   }
 }
 
-resource "aws_ecr_repository" "weather_dbt" {
-  name                 = "${local.project}/dbt"
+resource "aws_ecr_repository" "dbt" {
+  name                 = local.dbt_ecr_repository_name
   image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
@@ -16,7 +16,7 @@ resource "aws_ecr_repository" "weather_dbt" {
   }
 }
 
-data "aws_ecr_lifecycle_policy_document" "main" {
+data "aws_ecr_lifecycle_policy_document" "keep_five_images" {
   rule {
     priority    = 1
     description = "Keep at most five images."
@@ -29,12 +29,12 @@ data "aws_ecr_lifecycle_policy_document" "main" {
   }
 }
 
-resource "aws_ecr_lifecycle_policy" "weather_scrape" {
-  repository = aws_ecr_repository.weather_scrape.name
-  policy     = data.aws_ecr_lifecycle_policy_document.main.json
+resource "aws_ecr_lifecycle_policy" "scrape" {
+  repository = aws_ecr_repository.scrape.name
+  policy     = data.aws_ecr_lifecycle_policy_document.keep_five_images.json
 }
 
-resource "aws_ecr_lifecycle_policy" "weather_dbt" {
-  repository = aws_ecr_repository.weather_dbt.name
-  policy     = data.aws_ecr_lifecycle_policy_document.main.json
+resource "aws_ecr_lifecycle_policy" "dbt" {
+  repository = aws_ecr_repository.dbt.name
+  policy     = data.aws_ecr_lifecycle_policy_document.keep_five_images.json
 }
