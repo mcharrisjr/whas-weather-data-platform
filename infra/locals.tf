@@ -5,6 +5,7 @@ locals {
   project_slug = replace(var.project_name, "-", "_")
 
   raw_database_name          = "${local.project_slug}_raw"
+  staging_database_name = "${local.project_slug}_staging"
   intermediate_database_name = "${local.project_slug}_intermediate"
   mart_database_name         = "${local.project_slug}_mart"
 
