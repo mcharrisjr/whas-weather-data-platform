@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "raw" {
-  bucket           = local.raw_bucket_nae
+  bucket           = local.raw_bucket_name
   bucket_namespace = "account-regional"
 }
 
