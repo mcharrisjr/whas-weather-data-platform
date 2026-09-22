@@ -1,7 +1,7 @@
 import datetime as dt
 from zoneinfo import ZoneInfo
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 from whas_weather_data_platform.core.models import HourlyWeatherObservation
 from whas_weather_data_platform.core.parse import ensure_find
@@ -35,48 +35,43 @@ def parse_hourly_weather_observation(html: str) -> HourlyWeatherObservation:
     )
 
 
-def _parse_temperature(soup: BeautifulSoup) -> int:
+def _parse_temperature(soup: Tag) -> int:
     return int(ensure_find(soup, "div", class_="right-now-radar__temp").text)
 
 
-def _parse_feels_like(soup: BeautifulSoup) -> int:
+def _parse_feels_like(soup: Tag) -> int:
     degree_chr = chr(176)
+    div = ensure_find(soup, "div", class_="right-now-radar__feels-like")
 
     return int(
-        ensure_find(soup, "div", class_="right-now-radar__feels-like")
-        .text.lstrip()
-        .strip(degree_chr)
+        ensure_find(div, string=True, recursive=False).text.lstrip().strip(degree_chr)
     )
 
 
-def _parse_humidity(soup: BeautifulSoup) -> float:
+def _parse_humidity(soup: Tag) -> float:
+    div = ensure_find(soup, "div", class_="right-now-radar__humidity")
+
     return (
-        float(
-            ensure_find(soup, "div", class_="right-now-radar__humidity")
-            .text.lstrip()
-            .strip("%")
-        )
+        float(ensure_find(div, string=True, recursive=False).text.lstrip().strip("%"))
         / 100
     )
 
 
-def _parse_wind(soup: BeautifulSoup) -> tuple[int, str]:
+def _parse_wind(soup: Tag) -> tuple[int, str]:
     wind_str = ensure_find(soup, "div", class_="right-now-radar__wind").text.lstrip()
-    wind_speed, _, wind_direction = wind_str.split()
+    _, wind_speed, _, wind_direction = wind_str.split()
 
     return int(wind_speed), wind_direction
 
 
-def _parse_chance_of_precipitation(soup: BeautifulSoup) -> float:
+def _parse_chance_of_precipitation(soup: Tag) -> float:
+    div = ensure_find(soup, "div", class_="right-now-radar__rain")
+
     return (
-        float(
-            ensure_find(soup, "div", class_="right-now-radar__rain")
-            .text.lstrip()
-            .strip("%")
-        )
+        float(ensure_find(div, string=True, recursive=False).text.lstrip().strip("%"))
         / 100
     )
 
 
-def _parse_condition(soup: BeautifulSoup) -> str:
+def _parse_condition(soup: Tag) -> str:
     return ensure_find(soup, "div", class_="right-now-radar__condition").text

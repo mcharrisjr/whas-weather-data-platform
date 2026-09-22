@@ -41,14 +41,21 @@ def parse_hourly_weather_forecasts(html: str) -> list[HourlyWeatherForecast]:
 
 
 def _parse_forecasted_for(weather_row: Tag, *, current_date: dt.date) -> dt.datetime:
-    forecasted_for_hour_str = ensure_find(
+    forecasted_for_str = ensure_find(
         weather_row,
         "span",
         class_="weather-hourly__hour weather-hourly__hour_visible_true",
     ).text
-    forecasted_for_hour = int(forecasted_for_hour_str.split()[0])
 
-    return dt.datetime.combine(current_date, dt.time(forecasted_for_hour))
+    eastern_tz = ZoneInfo("America/New_York")
+
+    forecasted_for = (
+        dt.datetime.strptime(forecasted_for_str, "%I %p")
+        .replace(tzinfo=eastern_tz)
+        .time()
+    )
+
+    return dt.datetime.combine(current_date, forecasted_for).replace(tzinfo=eastern_tz)
 
 
 def _parse_temperature(weather_row: Tag) -> int:

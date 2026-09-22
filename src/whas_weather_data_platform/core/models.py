@@ -26,8 +26,8 @@ class DailyWeatherForecast(ScrapedWeather):
     """
 
     forecast_date: dt.date
-    high_temperature_f: float
-    low_temperature_f: float
+    high_temperature_f: int
+    low_temperature_f: int
     chance_of_precipitation: float
     wind_speed_mph: int
     wind_direction: str
@@ -45,7 +45,7 @@ class HourlyWeatherForecast(ScrapedWeather):
     """
 
     forecasted_for: dt.datetime
-    temperature_f: float
+    temperature_f: int
     chance_of_precipitation: float
     wind_speed_mph: int
     wind_direction: str
@@ -66,8 +66,8 @@ class HourlyWeatherObservation(ScrapedWeather):
     """
 
     observed_at: dt.datetime
-    temperature_f: float
-    feels_like_f: float
+    temperature_f: int
+    feels_like_f: int
     humidity: float
     chance_of_precipitation: float
     wind_speed_mph: int

@@ -62,13 +62,13 @@ class S3Client:
             weather_observation: Weather observation.
             observation_frequency: Observation frequency.
         """
-        observed_date = weather_observation.observed_at.date()
+        observation_date = weather_observation.observed_at.date()
 
         ndjson = weather_observation.model_dump_json()
 
         s3_object_key = (
             f"{os.environ['WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE']}_{observation_frequency}_{WeatherDataType.OBSERVATION}/"
-            f"observed_date={observed_date.isoformat()}/"
+            f"observation_date={observation_date.isoformat()}/"
             f"{WeatherDataType.OBSERVATION}.ndjson"
         )
 

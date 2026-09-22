@@ -182,7 +182,7 @@ resource "aws_glue_catalog_table" "raw_hourly_observation" {
   }
 
   partition_keys {
-    name = "observed_date"
+    name = "observation_date"
     type = "date"
   }
 }
