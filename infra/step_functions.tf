@@ -12,7 +12,7 @@ resource "aws_sfn_state_machine" "daily" {
 
         Parameters = {
           Cluster        = aws_ecs_cluster.main.arn
-          TaskDefinition = aws_ecs_task_definition.daily_forecasted_weather
+          TaskDefinition = aws_ecs_task_definition.daily_forecasted_weather.arn
           LaunchType     = "FARGATE"
 
           NetworkConfiguration = {
@@ -73,7 +73,7 @@ resource "aws_sfn_state_machine" "hourly" {
 
                 Parameters = {
                   Cluster        = aws_ecs_cluster.main.arn
-                  TaskDefinition = aws_ecs_task_definition.hourly_forecasted_weather
+                  TaskDefinition = aws_ecs_task_definition.hourly_forecasted_weather.arn
                   LaunchType     = "FARGATE"
 
                   NetworkConfiguration = {
@@ -100,7 +100,7 @@ resource "aws_sfn_state_machine" "hourly" {
 
                 Parameters = {
                   Cluster        = aws_ecs_cluster.main.arn
-                  TaskDefinition = aws_ecs_task_definition.hourly_observed_weather
+                  TaskDefinition = aws_ecs_task_definition.hourly_observed_weather.arn
                   LaunchType     = "FARGATE"
 
                   NetworkConfiguration = {
