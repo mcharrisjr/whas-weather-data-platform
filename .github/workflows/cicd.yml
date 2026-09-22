@@ -19,6 +19,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@4
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --group dev --group scrape
+
+      - name: Check Python lint
+        run: uv run poe py-check-lint
+        background: true
+
+      - name: Check Python format
+        run: uv run poe py-check-format
+        background: true
+
+      - name: Check Python types
+        run: uv run poe py-check-types
+        background: true
+
+      - name: Check SQL lint
+        run: uv run poe sql-check-lint
+        background: true
+
+      - name: Measure test coverage
+        run: uv run poe coverage
+        background: true
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:

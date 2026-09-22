@@ -57,7 +57,6 @@ shell_interpreter = "bash"
 
 [tool.poe.tasks]
 test-unit = "pytest -vv --show-capture=no --disable-pytest-warnings tests/unit"
-test-integration = "pytest -vv --show-capture=no --disable-pytest-warnings tests/integration"
 coverage = "pytest --cov=src --cov-config=.coveragerc --cov-report term-missing --cov-fail-under=80 tests/unit"
 py-check-lint = "ruff check"
 py-lint = "ruff check --fix"
