@@ -6,7 +6,7 @@ resource "aws_sfn_state_machine" "daily" {
     StartAt = "ScrapeDailyForecast"
 
     States = {
-      Scrape = {
+      ScrapeDailyForecast = {
         Type     = "Task"
         Resource = "arn:aws:states:::ecs:runTask.sync"
 
@@ -27,7 +27,7 @@ resource "aws_sfn_state_machine" "daily" {
         Next = "DbtBuild"
       }
 
-      RunDbt = {
+      DbtBuild = {
         Type     = "Task"
         Resource = "arn:aws:states:::ecs:runTask.sync"
 
@@ -121,7 +121,7 @@ resource "aws_sfn_state_machine" "hourly" {
         Next = "DbtBuild"
       }
 
-      RunDbt = {
+      DbtBuild = {
         Type     = "Task"
         Resource = "arn:aws:states:::ecs:runTask.sync"
 
