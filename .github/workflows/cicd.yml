@@ -27,26 +27,23 @@ jobs:
       - name: Install dependencies
         run: uv sync --group dev --group scrape
 
-      - name: Check Python lint
-        run: uv run poe py-check-lint
-        background: true
+      - parallel:
 
-      - name: Check Python format
-        run: uv run poe py-check-format
-        background: true
-
-      - name: Check Python types
-        run: uv run poe py-check-types
-        background: true
-
-      - name: Check SQL lint
-        run: uv run poe sql-check-lint
-        background: true
-
-      - name: Measure test coverage
-        run: uv run poe coverage
-        background: true
-
+        - name: Check Python lint
+          run: uv run poe py-check-lint
+  
+        - name: Check Python format
+          run: uv run poe py-check-format
+  
+        - name: Check Python types
+          run: uv run poe py-check-types
+  
+        - name: Check SQL lint
+          run: uv run poe sql-check-lint
+  
+        - name: Measure test coverage
+          run: uv run poe coverage
+  
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
