@@ -198,6 +198,27 @@ data "aws_iam_policy_document" "step_function" {
       aws_iam_role.ecs_task_dbt_build.arn,
     ]
   }
+
+  statement {
+    actions = [
+      "events:PutRule",
+      "events:PutTargets",
+      "events:RemoveTargets",
+      "events:DeleteRule",
+      "events:DescribeRule"
+    ]
+    resources = [
+      "arn:aws:events:*:${local.aws_account_id}:rule/StepFunctionsGetEventsForECSTaskRule"
+    ]
+  }
+
+  statement {
+    actions = [
+      "events:CreateManagedRule",
+      "events:PutManagedRule"
+    ]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_policy" "step_function" {
