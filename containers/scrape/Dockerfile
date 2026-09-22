@@ -1,4 +1,4 @@
-FROM python:3.12-slim-bookwork AS builder
+FROM python:3.12-slim-bookworm AS builder
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/
 
