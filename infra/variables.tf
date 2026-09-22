@@ -1,7 +1,7 @@
 variable "project_name" {
   description = "Project name."
   type        = string
-  default     = "whas-weather-data-platform"
+  default     = "whas-weather"
 }
 
 variable "image_tag" {
