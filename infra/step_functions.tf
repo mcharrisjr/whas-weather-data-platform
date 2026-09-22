@@ -52,7 +52,7 @@ resource "aws_sfn_state_machine" "daily" {
 }
 
 resource "aws_sfn_state_machine" "hourly" {
-  name     = "${var.project_name}-daily"
+  name     = "${var.project_name}-hourly"
   role_arn = aws_iam_role.step_function.arn
 
   definition = jsonencode({
