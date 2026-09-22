@@ -37,7 +37,11 @@ def test_parse_hourly_weather_observation(weather_soup: Tag) -> None:
 
     with (
         patch.object(parse_module.dt, "datetime", MutableDateTime),
-        patch.object(MutableDateTime, "now", return_value=dt.datetime(2026, 9, 21, 12, tzinfo=eastern_tz)),
+        patch.object(
+            MutableDateTime,
+            "now",
+            return_value=dt.datetime(2026, 9, 21, 12, tzinfo=eastern_tz),
+        ),
     ):
         actual = parse_hourly_weather_observation(str(weather_soup))
 

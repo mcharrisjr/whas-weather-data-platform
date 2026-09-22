@@ -1,7 +1,6 @@
 import sys
 from unittest.mock import patch
 
-import aiohttp
 import pytest
 
 import whas_weather_data_platform.hourly_forecast.scrape as scrape_module
@@ -50,7 +49,10 @@ async def test_main() -> None:
         patch.object(main_module, "boto3", autospec=True) as mock_boto3_module,
         patch.object(main_module, "S3Client", autospec=True) as mock_s3_client_cls,
         patch.object(scrape_module, "scrape", autospec=True) as mock_scrape,
-        patch.dict(main_module.SCRAPER_REGISTRY, {(WeatherDataType.FORECAST, WeatherDataFrequency.HOURLY): mock_scrape}),
+        patch.dict(
+            main_module.SCRAPER_REGISTRY,
+            {(WeatherDataType.FORECAST, WeatherDataFrequency.HOURLY): mock_scrape},
+        ),
     ):
         mock_whas_client = mock_whas_client_cls.return_value
 
