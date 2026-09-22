@@ -6,8 +6,8 @@ resource "aws_ecs_task_definition" "hourly_forecasted_weather" {
   family                   = "${var.project_name}-scrape-hourly-forecasted-weather"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu       = "256"
-  memory    = "512"
+  cpu                      = "256"
+  memory                   = "512"
   container_definitions = jsonencode([
     {
       name      = "scrape"
@@ -34,8 +34,8 @@ resource "aws_ecs_task_definition" "daily_forecasted_weather" {
   family                   = "${var.project_name}-scrape-daily-forecasted-weather"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu       = "256"
-  memory    = "512"
+  cpu                      = "256"
+  memory                   = "512"
   container_definitions = jsonencode([
     {
       name      = "scrape"
@@ -62,8 +62,8 @@ resource "aws_ecs_task_definition" "hourly_observed_weather" {
   family                   = "${var.project_name}-scrape-hourly-observed-weather"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu       = "256"
-  memory    = "512"
+  cpu                      = "256"
+  memory                   = "512"
   container_definitions = jsonencode([
     {
       name      = "scrape"
@@ -90,8 +90,8 @@ resource "aws_ecs_task_definition" "dbt_build" {
   family                   = "${var.project_name}-dbt-build"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu       = "256"
-  memory    = "512"
+  cpu                      = "256"
+  memory                   = "512"
   container_definitions = jsonencode([
     {
       name      = "dbt"
