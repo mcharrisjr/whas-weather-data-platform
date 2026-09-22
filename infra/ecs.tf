@@ -14,7 +14,8 @@ resource "aws_ecs_task_definition" "hourly_forecasted_weather" {
       memory    = 512
       essential = true
       environment = [
-        { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket }
+        { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.id },
+        { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket },
       ]
       command = ["--type", "forecast", "--frequency", "hourly"]
     }
@@ -41,7 +42,8 @@ resource "aws_ecs_task_definition" "daily_forecasted_weather" {
       memory    = 512
       essential = true
       environment = [
-        { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket }
+        { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.id },
+        { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket },
       ]
       command = ["--type", "forecast", "--frequency", "daily"]
     }
@@ -68,7 +70,8 @@ resource "aws_ecs_task_definition" "hourly_observed_weather" {
       memory    = 512
       essential = true
       environment = [
-        { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket }
+        { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.id },
+        { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket },
       ]
       command = ["--type", "observation", "--frequency", "hourly"]
     }
