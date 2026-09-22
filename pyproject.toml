@@ -66,6 +66,3 @@ py-format = "ruff format"
 py-check-types = "ty check"
 sql-check-lint = "sqlfluff lint dbt/models/"
 sql-lint = "sqlfluff fix dbt/models/"
-
-pre-commit.parallel = ["coverage", "py-check-lint", "py-check-format", "py-check-types", "sql-check-lint"]
-    
