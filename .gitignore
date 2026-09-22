@@ -11,3 +11,6 @@ wheels/
 
 # Terraform
 **/.terraform/
+
+# Pytest
+**/.coverage
