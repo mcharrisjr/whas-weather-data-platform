@@ -12,11 +12,10 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --frozen --only-group scrape --no-install-project
 
+COPY pyproject.toml uv.lock ./
 COPY src/ src/
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --frozen --only-group scrape
 
 
@@ -27,7 +26,8 @@ WORKDIR /app
 COPY --from=builder /app/.venv /app/.venv
 COPY --from=builder /app /app
 
-ENV PATH="/app/.venv/bin:$PATH"
+ENV PATH="/app/.venv/bin:$PATH" \
+    PYTHONPATH="/app/src"
 
 ENTRYPOINT ["python", "-m", "whas_weather_data_platform"]
 CMD ["--help"]
