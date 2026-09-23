@@ -31,11 +31,11 @@ resource "aws_sfn_state_machine" "daily" {
         Type     = "Task"
         Resource = "arn:aws:states:::athena:startQueryExecution.sync"
 
-        Arguments = {
+        Parameters = {
           QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.raw.name}.${aws_glue_catalog_table.raw_daily_forecast.name}"
           WorkGroup   = "primary"
 
-          ResultsConfiguration = {
+          ResultConfiguration = {
             OutputLocation = "s3://${aws_s3_bucket.athena_query_results.id}/"
           }
         }
@@ -149,11 +149,11 @@ resource "aws_sfn_state_machine" "hourly" {
                 Type     = "Task"
                 Resource = "arn:aws:states:::athena:startQueryExecution.sync"
 
-                Arguments = {
+                Parameters = {
                   QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.raw.name}.${aws_glue_catalog_table.raw_hourly_forecast.name}"
                   WorkGroup   = "primary"
 
-                  ResultsConfiguration = {
+                  ResultConfiguration = {
                     OutputLocation = "s3://${aws_s3_bucket.athena_query_results.id}/"
                   }
                 }
@@ -171,11 +171,11 @@ resource "aws_sfn_state_machine" "hourly" {
                 Type     = "Task"
                 Resource = "arn:aws:states:::athena:startQueryExecution.sync"
 
-                Arguments = {
+                Parameters = {
                   QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.raw.name}.${aws_glue_catalog_table.raw_hourly_observation.name}"
                   WorkGroup   = "primary"
 
-                  ResultsConfiguration = {
+                  ResultConfiguration = {
                     OutputLocation = "s3://${aws_s3_bucket.athena_query_results.id}/"
                   }
                 }
