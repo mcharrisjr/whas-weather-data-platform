@@ -24,7 +24,7 @@ models:
       +table_type: iceberg
       +format: parquet
       +s3_data_dir: "s3://{{ env_var('WHAS_WEATHER_INTERMEDIATE_S3_BUCKET') }}/"
-      +s3_data_naming: schema_table
+      +s3_data_naming: schema_table_unique
 
     marts:
       +schema: whas_weather_mart
@@ -32,4 +32,4 @@ models:
       +table_type: iceberg
       +format: parquet
       +s3_data_dir: "s3://{{ env_var('WHAS_WEATHER_MART_S3_BUCKET') }}/"
-      +s3_data_naming: schema_table
+      +s3_data_naming: schema_table_unique
