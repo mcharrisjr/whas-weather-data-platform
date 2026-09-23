@@ -219,6 +219,51 @@ data "aws_iam_policy_document" "step_function" {
     ]
     resources = ["*"]
   }
+
+  statement {
+    actions = [
+      "athena:StartQueryExecution",
+      "athena:GetQueryExecution",
+      "athena:GetQueryResults",
+      "athena:StopQueryExecution",
+    ]
+    resources = [
+      "arn:aws:athena:${local.aws_region}:${local.aws_account_id}:workgroup/primary"
+    ]
+  }
+
+  statement {
+    actions = [
+      "s3:GetBucketLocation",
+      "s3:GetObject",
+      "s3:ListBucket",
+      "s3:PutObject",
+    ]
+    resources = [
+      "arn:aws:s3:::${aws_s3_bucket.raw.bucket}",
+      "arn:aws:s3:::${aws_s3_bucket.raw.bucket}/*",
+      "arn:aws:s3:::${aws_s3_bucket.athena_query_results.bucket}",
+      "arn:aws:s3:::${aws_s3_bucket.athena_query_results.bucket}/*",
+    ]
+  }
+
+  statement {
+    actions = [
+      "glue:GetDatabase",
+      "glue:GetTable",
+      "glue:GetPartition",
+      "glue:GetPartitions",
+      "glue:CreatePartition",
+      "glue:BatchCreatePartition"
+    ]
+    resources = [
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:catalog",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:database/${aws_glue_catalog_database.raw.name}",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.raw.name}/${aws_glue_catalog_table.raw_hourly_forecast.name}",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.raw.name}/${aws_glue_catalog_table.raw_daily_forecast.name}",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.raw.name}/${aws_glue_catalog_table.raw_hourly_observation.name}",
+    ]
+  }
 }
 
 resource "aws_iam_policy" "step_function" {
