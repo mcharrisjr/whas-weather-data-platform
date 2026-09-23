@@ -24,6 +24,22 @@ resource "aws_sfn_state_machine" "daily" {
           }
         }
 
+        Next = "RepairDailyForecast"
+      }
+
+      RepairDailyForecast = {
+        Type = "Task"
+        Resource = "arn:aws:states:::athena:startQueryExecution.sync"
+
+        Arguments = {
+          QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.raw.name}.${aws_glue_catalog_table.raw_daily_forecast.name}"
+          WorkGroup = "primary"
+
+          ResultsConfiguration = {
+            OutputLocation = "s3://${aws_s3_bucket.athena_query_results.id}/"
+          }
+        }
+
         Next = "DbtBuild"
       }
 
@@ -109,6 +125,58 @@ resource "aws_sfn_state_machine" "hourly" {
                       SecurityGroups = [aws_security_group.ecs_task.id]
                       AssignPublicIp = "ENABLED"
                     }
+                  }
+                }
+
+                End = true
+              }
+            }
+          }
+        ]
+
+        Next = "RepairInParallel"
+      }
+
+      RepairInParallel = {
+        Type = "Parallel"
+
+        Branches = [
+          {
+            StartAt = "RepairHourlyForecast"
+
+            States = {
+              RepairDailyForecast = {
+                Type = "Task"
+                Resource = "arn:aws:states:::athena:startQueryExecution.sync"
+
+                Arguments = {
+                  QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.raw.name}.${aws_glue_catalog_table.raw_hourly_forecast.name}"
+                  WorkGroup = "primary"
+
+                  ResultsConfiguration = {
+                    OutputLocation = "s3://${aws_s3_bucket.athena_query_results.id}/"
+                  }
+                }
+
+                End = true
+              }
+            }
+          },
+
+          {
+            StartAt = "RepairHourlyObservation"
+
+            States = {
+              RepairHourlyObservation = {
+                Type = "Task"
+                Resource = "arn:aws:states:::athena:startQueryExecution.sync"
+
+                Arguments = {
+                  QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.raw.name}.${aws_glue_catalog_table.raw_hourly_observation.name}"
+                  WorkGroup = "primary"
+
+                  ResultsConfiguration = {
+                    OutputLocation = "s3://${aws_s3_bucket.athena_query_results.id}/"
                   }
                 }
 
