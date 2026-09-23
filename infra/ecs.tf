@@ -3,7 +3,7 @@ resource "aws_ecs_cluster" "main" {
 }
 
 resource "aws_ecs_task_definition" "hourly_forecasted_weather" {
-  family                   = "${var.project_name}-scrape-hourly-forecasted-weather"
+  family                   = local.scrape_hourly_forecasted_weather_task_name
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = "256"
@@ -18,6 +18,15 @@ resource "aws_ecs_task_definition" "hourly_forecasted_weather" {
         { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket },
       ]
       command = ["--type", "forecast", "--frequency", "hourly"]
+
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.hourly_forecasted_weather.name
+          "awslogs-region"        = local.aws_region
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     }
   ])
 
@@ -31,7 +40,7 @@ resource "aws_ecs_task_definition" "hourly_forecasted_weather" {
 }
 
 resource "aws_ecs_task_definition" "daily_forecasted_weather" {
-  family                   = "${var.project_name}-scrape-daily-forecasted-weather"
+  family                   = local.scrape_daily_forecasted_weather_task_name
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = "256"
@@ -46,6 +55,15 @@ resource "aws_ecs_task_definition" "daily_forecasted_weather" {
         { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket },
       ]
       command = ["--type", "forecast", "--frequency", "daily"]
+
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.daily_forecasted_weather.name
+          "awslogs-region"        = local.aws_region
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     }
   ])
 
@@ -59,7 +77,7 @@ resource "aws_ecs_task_definition" "daily_forecasted_weather" {
 }
 
 resource "aws_ecs_task_definition" "hourly_observed_weather" {
-  family                   = "${var.project_name}-scrape-hourly-observed-weather"
+  family                   = local.scrape_hourly_observed_weather_task_name
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = "256"
@@ -74,6 +92,15 @@ resource "aws_ecs_task_definition" "hourly_observed_weather" {
         { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket },
       ]
       command = ["--type", "observation", "--frequency", "hourly"]
+
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.hourly_observed_weather.name
+          "awslogs-region"        = local.aws_region
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     }
   ])
 
@@ -87,7 +114,7 @@ resource "aws_ecs_task_definition" "hourly_observed_weather" {
 }
 
 resource "aws_ecs_task_definition" "dbt_build" {
-  family                   = "${var.project_name}-dbt-build"
+  family                   = local.dbt_build_task_name
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = "256"
@@ -104,6 +131,15 @@ resource "aws_ecs_task_definition" "dbt_build" {
         { "name" : "WHAS_WEATHER_MART_S3_BUCKET", "value" : aws_s3_bucket.mart.bucket }
       ]
       command = ["dbt", "build", "--select", "+marts"]
+
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.dbt_build.name
+          "awslogs-region"        = local.aws_region
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     }
   ])
 
