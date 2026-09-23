@@ -14,7 +14,7 @@ resource "aws_ecs_task_definition" "hourly_forecasted_weather" {
       image     = "${aws_ecr_repository.scrape.repository_url}:${var.image_tag}"
       essential = true
       environment = [
-        { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.id },
+        { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.name },
         { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket },
       ]
       command = ["--type", "forecast", "--frequency", "hourly"]
@@ -42,7 +42,7 @@ resource "aws_ecs_task_definition" "daily_forecasted_weather" {
       image     = aws_ecr_repository.scrape.repository_url
       essential = true
       environment = [
-        { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.id },
+        { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.name },
         { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket },
       ]
       command = ["--type", "forecast", "--frequency", "daily"]
@@ -70,7 +70,7 @@ resource "aws_ecs_task_definition" "hourly_observed_weather" {
       image     = "${aws_ecr_repository.scrape.repository_url}:${var.image_tag}"
       essential = true
       environment = [
-        { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.id },
+        { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.name },
         { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket },
       ]
       command = ["--type", "observation", "--frequency", "hourly"]
