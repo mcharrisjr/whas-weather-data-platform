@@ -66,6 +66,8 @@ data "aws_iam_policy_document" "dbt_build" {
       "glue:GetDatabases",
       "glue:GetTable",
       "glue:GetTables",
+      "glue:GetTableVersion",
+      "glue:GetTableVersions",
       "glue:GetPartitions",
       "glue:CreateDatabase",
       "glue:CreateTable",
