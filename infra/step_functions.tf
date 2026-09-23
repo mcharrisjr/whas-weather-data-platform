@@ -145,7 +145,7 @@ resource "aws_sfn_state_machine" "hourly" {
             StartAt = "RepairHourlyForecast"
 
             States = {
-              RepairDailyForecast = {
+              RepairHourlyForecast = {
                 Type     = "Task"
                 Resource = "arn:aws:states:::athena:startQueryExecution.sync"
 
