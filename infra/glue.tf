@@ -45,7 +45,7 @@ resource "aws_glue_catalog_table" "raw_hourly_forecast" {
 
     columns {
       name = "wind_speed_mph"
-      type = "tinyint"
+      type = "int"
     }
 
     columns {
@@ -101,7 +101,7 @@ resource "aws_glue_catalog_table" "raw_daily_forecast" {
 
     columns {
       name = "wind_speed_mph"
-      type = "tinyint"
+      type = "int"
     }
 
     columns {
@@ -162,7 +162,7 @@ resource "aws_glue_catalog_table" "raw_hourly_observation" {
 
     columns {
       name = "wind_speed_mph"
-      type = "tinyint"
+      type = "int"
     }
 
     columns {
