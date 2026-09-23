@@ -15,6 +15,6 @@ locals {
 
   scrape_hourly_forecasted_weather_task_name = "${var.project_name}-scrape-hourly-forecasted-weather"
   scrape_daily_forecasted_weather_task_name  = "${var.project_name}-scrape-daily-forecasted-weather"
-  scrape_hourly_observed_weather_task_name   = "${var.project_name}-scrape-hourly-forecasted-weather"
+  scrape_hourly_observed_weather_task_name   = "${var.project_name}-scrape-hourly-observed-weather"
   dbt_build_task_name                        = "${var.project_name}-dbt-build"
 }
