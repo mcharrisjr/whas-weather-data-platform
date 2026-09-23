@@ -13,7 +13,7 @@ locals {
   raw_daily_forecast_table_name     = "daily_forecast"
   raw_hourly_observation_table_name = "hourly_observation"
 
-  scrape_hourly_forecasted_weather_task_name = "${var.project_name}.scrape-hourly-forecasted-weather"
+  scrape_hourly_forecasted_weather_task_name = "${var.project_name}-scrape-hourly-forecasted-weather"
   scrape_daily_forecasted_weather_task_name  = "${var.project_name}-scrape-daily-forecasted-weather"
   scrape_hourly_observed_weather_task_name   = "${var.project_name}-scrape-hourly-forecasted-weather"
   dbt_build_task_name                        = "${var.project_name}-dbt-build"
