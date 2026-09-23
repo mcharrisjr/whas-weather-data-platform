@@ -36,7 +36,7 @@ models:
   - name: stg_hourly_forecast
     description: Hourly weather forecasts.
     columns:
-      - name: forecast_for
+      - name: forecasted_for
         description: Forecasted for datetime.
         tests:
           - not_null
