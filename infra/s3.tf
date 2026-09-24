@@ -1,81 +1,32 @@
 locals {
-  raw_bucket_name          = "${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an"
-  intermediate_bucket_name = "${var.project_name}-intermediate-${local.aws_account_id}-${local.aws_region}-an"
-  mart_bucket_name         = "${var.project_name}-mart-${local.aws_account_id}-${local.aws_region}-an"
-
-  athena_query_results_bucket_name = "${var.project_name}-athena-query-results-${local.aws_account_id}-${local.aws_region}-an"
+  buckets = toset([
+    "${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an",
+    "${var.project_name}-intermediate-${local.aws_account_id}-${local.aws_region}-an",
+    "${var.project_name}-mart-${local.aws_account_id}-${local.aws_region}-an",
+    "${var.project_name}-athena-query-results-${local.aws_account_id}-${local.aws_region}-an"
+  ])
 }
 
-resource "aws_s3_bucket" "raw" {
-  bucket           = local.raw_bucket_name
+resource "aws_s3_bucket" "buckets" {
+  for_each = local.buckets
+
+  bucket           = each.value
   bucket_namespace = "account-regional"
 }
 
-resource "aws_s3_bucket_versioning" "raw" {
-  bucket = aws_s3_bucket.raw.id
+resource "aws_s3_bucket_versioning" "bucket_versioning" {
+  for_each = { for k, v in aws_s3_bucket.buckets : k => v if k != "${var.project_name}-athena-query-results-${local.aws_account_id}-${local.aws_region}-an" }
+
+  bucket = each.value.bucket
   versioning_configuration {
     status = "Enabled"
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "raw" {
-  bucket = aws_s3_bucket.raw.id
+resource "aws_s3_bucket_public_access_block" "public_access_blocks" {
+  for_each = aws_s3_bucket.buckets
 
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket" "intermediate" {
-  bucket           = local.intermediate_bucket_name
-  bucket_namespace = "account-regional"
-}
-
-resource "aws_s3_bucket_versioning" "intermediate" {
-  bucket = aws_s3_bucket.intermediate.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "intermediate" {
-  bucket = aws_s3_bucket.intermediate.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket" "mart" {
-  bucket           = local.mart_bucket_name
-  bucket_namespace = "account-regional"
-}
-
-resource "aws_s3_bucket_versioning" "mart" {
-  bucket = aws_s3_bucket.mart.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "mart" {
-  bucket = aws_s3_bucket.mart.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket" "athena_query_results" {
-  bucket           = local.athena_query_results_bucket_name
-  bucket_namespace = "account-regional"
-}
-
-resource "aws_s3_bucket_public_access_block" "athena_query_results" {
-  bucket = aws_s3_bucket.athena_query_results.id
+  bucket = each.value.bucket
 
   block_public_acls       = true
   block_public_policy     = true
@@ -84,7 +35,7 @@ resource "aws_s3_bucket_public_access_block" "athena_query_results" {
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "athena_query_results" {
-  bucket = aws_s3_bucket.athena_query_results.bucket
+  bucket = aws_s3_bucket.buckets["${var.project_name}-athena-query-results-${local.aws_account_id}-${local.aws_region}-an"].bucket
 
   rule {
     id = "one-day-expiration"

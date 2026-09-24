@@ -20,7 +20,7 @@ resource "aws_glue_catalog_table" "raw_hourly_forecast" {
   table_type    = "EXTERNAL_TABLE"
 
   storage_descriptor {
-    location      = "s3://${aws_s3_bucket.raw.id}/${aws_glue_catalog_database.raw.name}_${local.raw_hourly_forecast_table_name}/"
+    location      = "s3://${aws_s3_bucket.buckets["${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an"].bucket}/${aws_glue_catalog_database.raw.name}_${local.raw_hourly_forecast_table_name}/"
     input_format  = "org.apache.hadoop.mapred.TextInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 
@@ -71,7 +71,7 @@ resource "aws_glue_catalog_table" "raw_daily_forecast" {
   table_type    = "EXTERNAL_TABLE"
 
   storage_descriptor {
-    location      = "s3://${aws_s3_bucket.raw.id}/${aws_glue_catalog_database.raw.name}_${local.raw_daily_forecast_table_name}/"
+    location      = "s3://${aws_s3_bucket.buckets["${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an"].bucket}/${aws_glue_catalog_database.raw.name}_${local.raw_daily_forecast_table_name}/"
     input_format  = "org.apache.hadoop.mapred.TextInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 
@@ -127,7 +127,7 @@ resource "aws_glue_catalog_table" "raw_hourly_observation" {
   table_type    = "EXTERNAL_TABLE"
 
   storage_descriptor {
-    location      = "s3://${aws_s3_bucket.raw.id}/${aws_glue_catalog_database.raw.name}_${local.raw_hourly_observation_table_name}/"
+    location      = "s3://${aws_s3_bucket.buckets["${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an"].bucket}/${aws_glue_catalog_database.raw.name}_${local.raw_hourly_observation_table_name}/"
     input_format  = "org.apache.hadoop.mapred.TextInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 

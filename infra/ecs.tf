@@ -25,7 +25,7 @@ resource "aws_ecs_task_definition" "scrape_ecs_tasks" {
       essential = true
       environment = [
         { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.name },
-        { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.raw.bucket },
+        { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.buckets["${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an"].bucket },
       ]
       command = each.value
 
@@ -62,9 +62,9 @@ resource "aws_ecs_task_definition" "dbt_build" {
       essential = true
       environment = [
         { "name" : "AWS_REGION", "value" : local.aws_region },
-        { "name" : "WHAS_WEATHER_ATHENA_QUERY_RESULTS_S3_BUCKET", "value" : aws_s3_bucket.athena_query_results.bucket },
-        { "name" : "WHAS_WEATHER_INTERMEDIATE_S3_BUCKET", "value" : aws_s3_bucket.intermediate.bucket },
-        { "name" : "WHAS_WEATHER_MART_S3_BUCKET", "value" : aws_s3_bucket.mart.bucket }
+        { "name" : "WHAS_WEATHER_ATHENA_QUERY_RESULTS_S3_BUCKET", "value" : aws_s3_bucket.buckets["${var.project_name}-athena-query-results-${local.aws_account_id}-${local.aws_region}-an"].bucket },
+        { "name" : "WHAS_WEATHER_INTERMEDIATE_S3_BUCKET", "value" : aws_s3_bucket.buckets["${var.project_name}-intermediate-${local.aws_account_id}-${local.aws_region}-an"].bucket },
+        { "name" : "WHAS_WEATHER_MART_S3_BUCKET", "value" : aws_s3_bucket.buckets["${var.project_name}-mart-${local.aws_account_id}-${local.aws_region}-an"].bucket }
       ]
       command = ["dbt", "build", "--select", "+marts"]
 

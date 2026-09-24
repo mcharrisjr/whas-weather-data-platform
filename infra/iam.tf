@@ -24,9 +24,9 @@ data "aws_iam_policy_document" "raw_bucket_write" {
   statement {
     actions = ["s3:PutObject"]
     resources = [
-      "${aws_s3_bucket.raw.arn}/${local.raw_database_name}_${local.raw_hourly_forecast_table_name}/*",
-      "${aws_s3_bucket.raw.arn}/${local.raw_database_name}_${local.raw_daily_forecast_table_name}/*",
-      "${aws_s3_bucket.raw.arn}/${local.raw_database_name}_${local.raw_hourly_observation_table_name}/*",
+      "${aws_s3_bucket.buckets["${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an"].arn}/${local.raw_database_name}_${local.raw_hourly_forecast_table_name}/*",
+      "${aws_s3_bucket.buckets["${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an"].arn}/${local.raw_database_name}_${local.raw_daily_forecast_table_name}/*",
+      "${aws_s3_bucket.buckets["${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an"].arn}/${local.raw_database_name}_${local.raw_hourly_observation_table_name}/*",
     ]
   }
 }
@@ -242,10 +242,10 @@ data "aws_iam_policy_document" "step_function" {
       "s3:PutObject",
     ]
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.raw.bucket}",
-      "arn:aws:s3:::${aws_s3_bucket.raw.bucket}/*",
-      "arn:aws:s3:::${aws_s3_bucket.athena_query_results.bucket}",
-      "arn:aws:s3:::${aws_s3_bucket.athena_query_results.bucket}/*",
+      "arn:aws:s3:::${aws_s3_bucket.buckets["${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an"].bucket}",
+      "arn:aws:s3:::${aws_s3_bucket.buckets["${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an"].bucket}/*",
+      "arn:aws:s3:::${aws_s3_bucket.buckets["${var.project_name}-athena-query-results-${local.aws_account_id}-${local.aws_region}-an"].bucket}",
+      "arn:aws:s3:::${aws_s3_bucket.buckets["${var.project_name}-athena-query-results-${local.aws_account_id}-${local.aws_region}-an"].bucket}/*",
     ]
   }
 
