@@ -13,8 +13,11 @@ locals {
   raw_daily_forecast_table_name     = "daily_forecast"
   raw_hourly_observation_table_name = "hourly_observation"
 
-  scrape_hourly_forecasted_weather_task_name = "${var.project_name}-scrape-hourly-forecasted-weather"
-  scrape_daily_forecasted_weather_task_name  = "${var.project_name}-scrape-daily-forecasted-weather"
-  scrape_hourly_observed_weather_task_name   = "${var.project_name}-scrape-hourly-observed-weather"
-  dbt_build_task_name                        = "${var.project_name}-dbt-build"
+  scrape_ecs_tasks = {
+    "${var.project_name}-scrape-hourly-weather-forecast" : ["--type", "forecast", "--frequency", "hourly"],
+    "${var.project_name}-scrape-daily-weather-forecast" : ["--type", "forecast", "--frequency", "daily"],
+    "${var.project_name}-scrape-hourly-weather-observation" : ["--type", "observation", "--frequency", "hourly"],
+  }
+
+  dbt_build_ecs_task = "${var.project_name}-dbt-build"
 }
