@@ -1,19 +1,11 @@
 locals {
-  scrape_ecr_repository_name    = "${var.project_name}/scrape"
-  dbt_build_ecr_repository_name = "${var.project_name}/dbt-build"
+  ecr_repositories = toset(["${var.project_name}/scrape", "${var.project_name}/dbt-build"])
 }
 
-resource "aws_ecr_repository" "scrape" {
-  name                 = local.scrape_ecr_repository_name
-  image_tag_mutability = "IMMUTABLE"
+resource "aws_ecr_repository" "repositories" {
+  for_each = local.ecr_repositories
 
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
-
-resource "aws_ecr_repository" "dbt_build" {
-  name                 = local.dbt_build_ecr_repository_name
+  name                 = each.value
   image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
@@ -34,12 +26,9 @@ data "aws_ecr_lifecycle_policy_document" "keep_five_images" {
   }
 }
 
-resource "aws_ecr_lifecycle_policy" "scrape" {
-  repository = aws_ecr_repository.scrape.name
-  policy     = data.aws_ecr_lifecycle_policy_document.keep_five_images.json
-}
+resource "aws_ecr_lifecycle_policy" "policies" {
+  for_each = local.ecr_repositories
 
-resource "aws_ecr_lifecycle_policy" "dbt" {
-  repository = aws_ecr_repository.dbt_build.name
+  repository = aws_ecr_repository.repositories["${each.value}"].name
   policy     = data.aws_ecr_lifecycle_policy_document.keep_five_images.json
 }

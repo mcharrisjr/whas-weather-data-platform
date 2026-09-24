@@ -11,7 +11,7 @@ resource "aws_ecs_task_definition" "hourly_forecasted_weather" {
   container_definitions = jsonencode([
     {
       name      = "scrape"
-      image     = "${aws_ecr_repository.scrape.repository_url}:${var.image_tag}"
+      image     = "${aws_ecr_repository.repositories["${var.project_name}/scrape"].repository_url}:${var.image_tag}"
       essential = true
       environment = [
         { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.name },
@@ -48,7 +48,7 @@ resource "aws_ecs_task_definition" "daily_forecasted_weather" {
   container_definitions = jsonencode([
     {
       name      = "scrape"
-      image     = aws_ecr_repository.scrape.repository_url
+      image     = "${aws_ecr_repository.repositories["${var.project_name}/scrape"].repository_url}:${var.image_tag}"
       essential = true
       environment = [
         { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.name },
@@ -85,7 +85,7 @@ resource "aws_ecs_task_definition" "hourly_observed_weather" {
   container_definitions = jsonencode([
     {
       name      = "scrape"
-      image     = "${aws_ecr_repository.scrape.repository_url}:${var.image_tag}"
+      image     = "${aws_ecr_repository.repositories["${var.project_name}/scrape"].repository_url}:${var.image_tag}"
       essential = true
       environment = [
         { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.name },
@@ -122,7 +122,7 @@ resource "aws_ecs_task_definition" "dbt_build" {
   container_definitions = jsonencode([
     {
       name      = "dbt"
-      image     = "${aws_ecr_repository.dbt_build.repository_url}:${var.image_tag}"
+      image     = "${aws_ecr_repository.repositories["${var.project_name}/dbt-build"].repository_url}:${var.image_tag}"
       essential = true
       environment = [
         { "name" : "AWS_REGION", "value" : local.aws_region },
