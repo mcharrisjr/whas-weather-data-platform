@@ -2,7 +2,7 @@ resource "aws_scheduler_schedule" "hourly" {
   name                         = "${var.project_name}-hourly"
   schedule_expression          = "cron(5 * * * ? *)"
   schedule_expression_timezone = "America/New_York"
-  state                        = "DISABLED"
+  state                        = "ENABLED"
 
   flexible_time_window {
     mode = "OFF"
@@ -18,7 +18,7 @@ resource "aws_scheduler_schedule" "daily" {
   name                         = "${var.project_name}-daily"
   schedule_expression          = "cron(5 0 * * ? *)"
   schedule_expression_timezone = "America/New_York"
-  state                        = "DISABLED"
+  state                        = "ENABLED"
 
   flexible_time_window {
     mode = "OFF"
