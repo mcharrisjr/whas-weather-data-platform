@@ -20,18 +20,16 @@ This data platform scrapes hourly weather forecasts and observations, and daily 
 ## Architecture
 
 ```mermaid
-  info
 flowchart TD
     Scheduler[EventBridge Scheduler]
 
     Scheduler --> Hourly[Hourly Step Function]
     Scheduler --> Daily[Daily Step Function]
 
-    Hourly --> HourlyScraper[ECS Fargate Scraper]
-    Daily --> DailyScraper[ECS Fargate Scraper]
+    Hourly --> Scraper[ECS Fargate Scraper]
+    Daily --> Scraper
 
-    HourlyScraper --> Raw[S3 Raw Data]
-    DailyScraper --> Raw[S3 Raw Data]
+    Scraper --> Raw[S3 Raw Data]
 
     Raw --> Catalog[Glue Data Catalog]
     Catalog --> dbt[ECS Fargate dbt]
