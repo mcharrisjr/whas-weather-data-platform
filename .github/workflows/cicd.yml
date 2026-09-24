@@ -1,7 +1,9 @@
 name: CICD
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - master
 
 permissions:
   id-token: write
