@@ -47,7 +47,7 @@ flowchart TD
 | Staging materialization | Views | Avoids persisting data for simple transformations. |
 | Intermediate materialization | Tables | Persists reusable derived state for downstream transformations (marts). |
 | Downstream table type | Apache Iceberg | Automically discovers new raw partitions upstream unlike Apache Hive tables. |
-| Downstream parition key(s) | None | Avoids the "small file problem".
+| Downstream partition key(s) | None | Avoids the "small file problem".
 | Data integrity | Pydantic upstream and dbt tests downstream | Python package ensures type safety and dbt ensures `not_null` values. |
 | Orchestration | AWS Step Functions | Sequences ingestion and transformation. Managed Workflows for Apache Airflow (MWAA) is a more costly and complex alternative. |
 | Compute | AWS ECS Fargate | Runs containerized workloads and scales automatically. |
