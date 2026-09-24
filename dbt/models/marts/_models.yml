@@ -24,8 +24,8 @@ models:
   - name: mart_hourly_forecast_accuracy
     description: Hourly weather forecast accuracy.
     columns:
-      - name: forecasted_at
-        description: Forecasted at datetime.
+      - name: forecasted_for
+        description: Forecasted for datetime.
         tests:
           - not_null
       - name: bias_temperature_f
