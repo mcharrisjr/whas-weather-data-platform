@@ -17,7 +17,6 @@ class ScrapedWeather(BaseModel):
         return value.isoformat(timespec="seconds")
 
 
-
 class DailyWeatherForecast(ScrapedWeather):
     """Daily weather forecast.
 
