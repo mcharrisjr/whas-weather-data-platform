@@ -1,6 +1,6 @@
 SELECT
     CAST(
-        FROM_ISO8601_FORMAT(
+        FROM_ISO8601_TIMESTAMP(
             observed_at
         ) AT TIME ZONE 'America/New_York' AS TIMESTAMP
     ) AS observed_at_local,
@@ -11,5 +11,5 @@ SELECT
     CAST(wind_speed_mph AS INTEGER) AS wind_speed_mph,
     wind_direction,
     condition_,
-    CAST(FROM_ISO8601_FORMAT(scraped_at) AS TIMESTAMP) AS scraped_at
+    CAST(FROM_ISO8601_TIMESTAMP(scraped_at) AS TIMESTAMP) AS scraped_at
 FROM {{ source('raw', 'hourly_observation') }}
