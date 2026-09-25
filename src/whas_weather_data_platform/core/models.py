@@ -1,6 +1,20 @@
 import datetime as dt
+from typing import Annotated
 
-from pydantic import BaseModel, field_serializer
+from pydantic import BaseModel, PlainSerializer
+
+WeatherDate = Annotated[
+    dt.date,
+    PlainSerializer(lambda value: value.isoformat(), return_type=str, when_used="json"),
+]
+WeatherDatetime = Annotated[
+    dt.datetime,
+    PlainSerializer(
+        lambda value: value.isoformat(timespec="seconds"),
+        return_type=str,
+        when_used="json",
+    ),
+]
 
 
 class ScrapedWeather(BaseModel):
@@ -10,11 +24,7 @@ class ScrapedWeather(BaseModel):
         scraped_at: Scraped at datetime.
     """
 
-    scraped_at: dt.datetime
-
-    @field_serializer("scraped_at", when_used="json")
-    def serialize_scraped_at(self, value: dt.datetime) -> str:
-        return value.isoformat(timespec="seconds")
+    scraped_at: WeatherDatetime
 
 
 class DailyWeatherForecast(ScrapedWeather):
@@ -29,7 +39,7 @@ class DailyWeatherForecast(ScrapedWeather):
         wind_direction: Wind direction.
     """
 
-    forecast_date: dt.date
+    forecast_date: WeatherDate
     high_temperature_f: int
     low_temperature_f: int
     chance_of_precipitation: float
@@ -48,15 +58,11 @@ class HourlyWeatherForecast(ScrapedWeather):
         wind_direction: Wind direction.
     """
 
-    forecasted_for: dt.datetime
+    forecasted_for: WeatherDatetime
     temperature_f: int
     chance_of_precipitation: float
     wind_speed_mph: int
     wind_direction: str
-
-    @field_serializer("forecasted_for", when_used="json")
-    def serialize_forecasted_for(self, value: dt.datetime) -> str:
-        return value.isoformat(timespec="seconds")
 
 
 class HourlyWeatherObservation(ScrapedWeather):
@@ -73,7 +79,7 @@ class HourlyWeatherObservation(ScrapedWeather):
         condition_: Condition.
     """
 
-    observed_at: dt.datetime
+    observed_at: WeatherDatetime
     temperature_f: int
     feels_like_f: int
     humidity: float
@@ -81,7 +87,3 @@ class HourlyWeatherObservation(ScrapedWeather):
     wind_speed_mph: int
     wind_direction: str
     condition_: str
-
-    @field_serializer("observed_at", when_used="json")
-    def serialize_observed_at(self, value: dt.datetime) -> str:
-        return value.isoformat(timespec="seconds")
