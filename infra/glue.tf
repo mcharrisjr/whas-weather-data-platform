@@ -30,7 +30,7 @@ resource "aws_glue_catalog_table" "raw_hourly_forecast" {
 
     columns {
       name = "forecasted_for"
-      type = "timestamp"
+      type = "string"
     }
 
     columns {
@@ -55,7 +55,7 @@ resource "aws_glue_catalog_table" "raw_hourly_forecast" {
 
     columns {
       name = "scraped_at"
-      type = "timestamp"
+      type = "string"
     }
   }
 
@@ -111,7 +111,7 @@ resource "aws_glue_catalog_table" "raw_daily_forecast" {
 
     columns {
       name = "scraped_at"
-      type = "timestamp"
+      type = "string"
     }
   }
 
@@ -137,7 +137,7 @@ resource "aws_glue_catalog_table" "raw_hourly_observation" {
 
     columns {
       name = "observed_at"
-      type = "timestamp"
+      type = "string"
     }
 
     columns {
@@ -177,7 +177,7 @@ resource "aws_glue_catalog_table" "raw_hourly_observation" {
 
     columns {
       name = "scraped_at"
-      type = "timestamp"
+      type = "string"
     }
   }
 
