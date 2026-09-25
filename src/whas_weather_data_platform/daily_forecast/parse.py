@@ -18,7 +18,7 @@ def parse_daily_weather_forecasts(html: str) -> list[DailyWeatherForecast]:
     """
     soup = BeautifulSoup(html, "html.parser")
 
-    scraped_at = dt.datetime.now(tz=ZoneInfo("America/New_York"))
+    scraped_at = dt.datetime.now(tz=ZoneInfo("UTC"))
     current_year = scraped_at.year
 
     daily_weather_forecasts: list[DailyWeatherForecast] = []

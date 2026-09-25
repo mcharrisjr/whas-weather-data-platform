@@ -18,12 +18,12 @@ def parse_hourly_weather_observation(html: str) -> HourlyWeatherObservation:
     """
     soup = BeautifulSoup(html, "html.parser")
 
-    scraped_at = dt.datetime.now(tz=ZoneInfo("America/New_York"))
+    scraped_at = dt.datetime.now(tz=ZoneInfo("UTC"))
 
     wind_speed_mph, wind_direction = _parse_wind(soup)
 
     return HourlyWeatherObservation(
-        observed_at=scraped_at,
+        observed_at=scraped_at.astimezone(ZoneInfo("America/New_York")),
         temperature_f=_parse_temperature(soup),
         feels_like_f=_parse_feels_like(soup),
         humidity=_parse_humidity(soup),

@@ -1,19 +1,19 @@
 WITH ranked_forecast_hourly AS (
     SELECT
-        forecasted_for,
+        forecasted_for_local,
         temperature_f,
         chance_of_precipitation,
         wind_speed_mph,
         wind_direction,
         ROW_NUMBER() OVER (
-            PARTITION BY forecasted_for
+            PARTITION BY forecasted_for_local
             ORDER BY scraped_at DESC
         ) AS rn
     FROM {{ ref('stg_hourly_forecast') }}
 )
 
 SELECT
-    forecasted_for,
+    forecasted_for_local,
     temperature_f,
     chance_of_precipitation,
     wind_speed_mph,

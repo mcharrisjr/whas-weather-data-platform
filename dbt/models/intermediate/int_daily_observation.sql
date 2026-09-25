@@ -6,7 +6,7 @@ SELECT
     MIN(temperature_f) OVER (PARTITION BY observation_date) AS low_temperature_f
 FROM (
     SELECT
-        CAST(observed_at AS DATE) AS observation_date,
+        CAST(observed_at_local AS DATE) AS observation_date,
         temperature_f
     FROM {{ ref('stg_hourly_observation') }}
 )

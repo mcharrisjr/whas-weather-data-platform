@@ -29,7 +29,7 @@ def weather_row(weather_soup: Tag) -> Tag:
 
 
 def test_parse_daily_weather_forecasts(weather_soup: Tag) -> None:
-    eastern_tz = ZoneInfo("America/New_York")
+    utc_tz = ZoneInfo("UTC")
     expected = DailyWeatherForecast(
         forecast_date=dt.date(2026, 9, 21),
         high_temperature_f=87,
@@ -37,7 +37,7 @@ def test_parse_daily_weather_forecasts(weather_soup: Tag) -> None:
         chance_of_precipitation=0.3,
         wind_speed_mph=11,
         wind_direction="NNE",
-        scraped_at=dt.datetime(2026, 9, 21, 10, tzinfo=eastern_tz),
+        scraped_at=dt.datetime(2026, 9, 21, 10, tzinfo=utc_tz),
     )
 
     with (
@@ -46,12 +46,12 @@ def test_parse_daily_weather_forecasts(weather_soup: Tag) -> None:
             MutableDateTime,
             "now",
             autospec=True,
-            return_value=dt.datetime(2026, 9, 21, 10, tzinfo=eastern_tz),
+            return_value=dt.datetime(2026, 9, 21, 10, tzinfo=utc_tz),
         ) as mock_now,
     ):
         actual = parse_daily_weather_forecasts(str(weather_soup))
 
-        mock_now.assert_called_once_with(tz=eastern_tz)
+        mock_now.assert_called_once_with(tz=utc_tz)
 
     assert len(actual) == 10
     assert actual[0] == expected

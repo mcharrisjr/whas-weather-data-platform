@@ -1,4 +1,5 @@
 import os
+import uuid
 from collections.abc import Sequence
 
 from types_boto3_s3 import S3Client as S3Client_
@@ -40,7 +41,7 @@ class S3Client:
         s3_object_key = (
             f"{os.environ['WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE']}_{forecast_frequency}_{WeatherDataType.FORECAST}/"
             f"scraped_date={scraped_date.isoformat()}/"
-            f"{WeatherDataType.FORECAST}.ndjson"
+            f"{WeatherDataType.FORECAST}_{uuid.uuid4()}.ndjson"
         )
 
         self._s3_client.put_object(
@@ -69,7 +70,7 @@ class S3Client:
         s3_object_key = (
             f"{os.environ['WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE']}_{observation_frequency}_{WeatherDataType.OBSERVATION}/"
             f"observation_date={observation_date.isoformat()}/"
-            f"{WeatherDataType.OBSERVATION}.ndjson"
+            f"{WeatherDataType.OBSERVATION}_{uuid.uuid4()}.ndjson"
         )
 
         self._s3_client.put_object(

@@ -28,14 +28,16 @@ def weather_row(weather_soup: Tag) -> Tag:
 
 
 def test_parse_hourly_weather_forecasts(weather_soup: Tag) -> None:
-    eastern_tz = ZoneInfo("America/New_York")
+    utc_tz = ZoneInfo("UTC")
     expected = HourlyWeatherForecast(
-        forecasted_for=dt.datetime(2026, 9, 21, 13, tzinfo=eastern_tz),
+        forecasted_for=dt.datetime(
+            2026, 9, 21, 13, tzinfo=ZoneInfo("America/New_York")
+        ),
         temperature_f=84,
         chance_of_precipitation=0.15,
         wind_speed_mph=3,
         wind_direction="NNE",
-        scraped_at=dt.datetime(2026, 9, 21, 12, tzinfo=eastern_tz),
+        scraped_at=dt.datetime(2026, 9, 21, 12, tzinfo=utc_tz),
     )
 
     with (
@@ -44,12 +46,12 @@ def test_parse_hourly_weather_forecasts(weather_soup: Tag) -> None:
             MutableDateTime,
             "now",
             autospec=True,
-            return_value=dt.datetime(2026, 9, 21, 12, tzinfo=eastern_tz),
+            return_value=dt.datetime(2026, 9, 21, 12, tzinfo=utc_tz),
         ) as mock_now,
     ):
         actual = parse_hourly_weather_forecasts(str(weather_soup))
 
-        mock_now.assert_called_once_with(tz=eastern_tz)
+        mock_now.assert_called_once_with(tz=utc_tz)
 
     assert len(actual) == 12
     assert actual[0] == expected

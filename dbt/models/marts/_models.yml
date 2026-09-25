@@ -24,8 +24,8 @@ models:
   - name: mart_hourly_forecast_accuracy
     description: Hourly weather forecast accuracy.
     columns:
-      - name: forecasted_for
-        description: Forecasted for datetime.
+      - name: forecasted_for_local
+        description: Forecasted for datetime in local time zone (America/New_York).
         tests:
           - not_null
       - name: bias_temperature_f

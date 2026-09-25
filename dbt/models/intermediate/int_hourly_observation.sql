@@ -14,7 +14,7 @@ SELECT
     wind_direction,
     condition_,
     scraped_at,
-    DATE_TRUNC('hour', observed_at) AS observed_at
+    DATE_TRUNC('hour', observed_at_local) AS observed_at_local
 FROM {{ ref('stg_hourly_observation') }}
 
 {% if is_incremental() %}

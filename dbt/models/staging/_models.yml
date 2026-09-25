@@ -36,8 +36,8 @@ models:
   - name: stg_hourly_forecast
     description: Hourly weather forecasts.
     columns:
-      - name: forecasted_for
-        description: Forecasted for datetime.
+      - name: forecasted_for_local
+        description: Forecasted for datetime in local time zone (America/New_York).
         tests:
           - not_null
       - name: temperature_f
@@ -64,8 +64,8 @@ models:
   - name: stg_hourly_observation
     description: Hourly weather observations.
     columns:
-      - name: observed_at
-        description: Observed at datetime.
+      - name: observed_at_local
+        description: Observed at datetime in local time zone (America/New_York).
         tests:
           - unique
           - not_null

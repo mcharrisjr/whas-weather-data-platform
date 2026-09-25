@@ -1,5 +1,5 @@
 import datetime as dt
-from unittest.mock import ANY, MagicMock
+from unittest.mock import MagicMock
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -59,16 +59,14 @@ def test_put_forecasts(monkeypatch: pytest.MonkeyPatch) -> None:
         hourly_weather_forecasts, forecast_frequency=WeatherDataFrequency.HOURLY
     )
 
-    mock_s3_client.put_object.assert_called_once_with(
-        Bucket="whas-weather-data-platform-raw",
-        Key=(
-            "whas_weather_data_platform_raw_hourly_forecast/"
-            "scraped_date=2019-12-31/"
-            "forecast.ndjson"
-        ),
-        Body=ANY,
-        ContentType="application/x-ndjson",
+    _, kwargs = mock_s3_client.put_object.call_args
+
+    assert kwargs["Bucket"] == "whas-weather-data-platform-raw"
+    assert (
+        "whas_weather_data_platform_raw_hourly_forecast/scraped_date=2019-12-31/forecast"
+        in kwargs["Key"]
     )
+    assert kwargs["ContentType"] == "application/x-ndjson"
 
 
 def test_put_observation(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -103,13 +101,11 @@ def test_put_observation(monkeypatch: pytest.MonkeyPatch) -> None:
         hourly_weather_observation, observation_frequency=WeatherDataFrequency.HOURLY
     )
 
-    mock_s3_client.put_object.assert_called_once_with(
-        Bucket="whas-weather-data-platform-raw",
-        Key=(
-            "whas_weather_data_platform_raw_hourly_observation/"
-            "observation_date=2020-01-01/"
-            "observation.ndjson"
-        ),
-        Body=ANY,
-        ContentType="application/x-ndjson",
+    _, kwargs = mock_s3_client.put_object.call_args
+
+    assert kwargs["Bucket"] == "whas-weather-data-platform-raw"
+    assert (
+        "whas_weather_data_platform_raw_hourly_observation/observation_date=2020-01-01/observation"
+        in kwargs["Key"]
     )
+    assert kwargs["ContentType"] == "application/x-ndjson"
