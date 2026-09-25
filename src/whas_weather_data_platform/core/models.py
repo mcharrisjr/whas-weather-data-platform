@@ -1,6 +1,6 @@
 import datetime as dt
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_serializer
 
 
 class ScrapedWeather(BaseModel):
@@ -11,6 +11,11 @@ class ScrapedWeather(BaseModel):
     """
 
     scraped_at: dt.datetime
+
+    @field_serializer("scraped_at", when_used="json")
+    def serialize_scraped_at(self, value: dt.datetime) -> str:
+        return value.isoformat(timespec="seconds")
+
 
 
 class DailyWeatherForecast(ScrapedWeather):
@@ -50,6 +55,10 @@ class HourlyWeatherForecast(ScrapedWeather):
     wind_speed_mph: int
     wind_direction: str
 
+    @field_serializer("forecasted_for", when_used="json")
+    def serialize_forecasted_for(self, value: dt.datetime) -> str:
+        return value.isoformat(timespec="seconds")
+
 
 class HourlyWeatherObservation(ScrapedWeather):
     """Hourly weather observation.
@@ -73,3 +82,7 @@ class HourlyWeatherObservation(ScrapedWeather):
     wind_speed_mph: int
     wind_direction: str
     condition_: str
+
+    @field_serializer("observed_at", when_used="json")
+    def serialize_observed_at(self, value: dt.datetime) -> str:
+        return value.isoformat(timespec="seconds")
