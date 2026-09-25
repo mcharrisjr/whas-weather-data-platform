@@ -25,7 +25,7 @@ resource "aws_glue_catalog_table" "raw_hourly_forecast" {
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 
     ser_de_info {
-      serialization_library = "org.openx.data.jsonserde.JsonSerDe"
+      serialization_library = "org.apache.hive.hcatalog.data.JsonSerDe"
     }
 
     columns {
@@ -76,7 +76,7 @@ resource "aws_glue_catalog_table" "raw_daily_forecast" {
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 
     ser_de_info {
-      serialization_library = "org.openx.data.jsonserde.JsonSerDe"
+      serialization_library = "org.apache.hive.hcatalog.data.JsonSerDe"
     }
 
     columns {
@@ -132,7 +132,7 @@ resource "aws_glue_catalog_table" "raw_hourly_observation" {
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 
     ser_de_info {
-      serialization_library = "org.openx.data.jsonserde.JsonSerDe"
+      serialization_library = "org.apache.hive.hcatalog.data.JsonSerDe"
     }
 
     columns {
