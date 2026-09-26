@@ -30,9 +30,7 @@ def weather_row(weather_soup: Tag) -> Tag:
 def test_parse_hourly_weather_forecasts(weather_soup: Tag) -> None:
     utc_tz = ZoneInfo("UTC")
     expected = HourlyWeatherForecast(
-        forecasted_for=dt.datetime(
-            2026, 9, 21, 17, tzinfo=utc_tz
-        ),
+        forecasted_for=dt.datetime(2026, 9, 21, 17, tzinfo=utc_tz),
         temperature_f=84,
         chance_of_precipitation=0.15,
         wind_speed_mph=3,
