@@ -22,9 +22,9 @@ class MutableDateTime(dt.datetime):
 
 
 def test_parse_hourly_weather_observation(weather_soup: Tag) -> None:
-    eastern_tz = ZoneInfo("America/New_York")
+    utc_tz = ZoneInfo("UTC")
     expected = HourlyWeatherObservation(
-        observed_at=dt.datetime(2026, 9, 21, 12, tzinfo=eastern_tz),
+        observed_at=dt.datetime(2026, 9, 21, 12, tzinfo=utc_tz),
         temperature_f=84,
         feels_like_f=87,
         humidity=0.57,
@@ -32,7 +32,7 @@ def test_parse_hourly_weather_observation(weather_soup: Tag) -> None:
         wind_speed_mph=3,
         wind_direction="NE",
         condition_="Fair",
-        scraped_at=dt.datetime(2026, 9, 21, 12, tzinfo=eastern_tz),
+        scraped_at=dt.datetime(2026, 9, 21, 12, tzinfo=utc_tz),
     )
 
     with (
@@ -40,7 +40,7 @@ def test_parse_hourly_weather_observation(weather_soup: Tag) -> None:
         patch.object(
             MutableDateTime,
             "now",
-            return_value=dt.datetime(2026, 9, 21, 12, tzinfo=eastern_tz),
+            return_value=dt.datetime(2026, 9, 21, 12, tzinfo=utc_tz),
         ),
     ):
         actual = parse_hourly_weather_observation(str(weather_soup))

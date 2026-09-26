@@ -61,7 +61,7 @@ resource "aws_glue_catalog_table" "raw_hourly_forecast" {
 
   partition_keys {
     name = "scraped_date"
-    type = "date"
+    type = "string"
   }
 }
 
@@ -117,7 +117,7 @@ resource "aws_glue_catalog_table" "raw_daily_forecast" {
 
   partition_keys {
     name = "scraped_date"
-    type = "date"
+    type = "string"
   }
 }
 
@@ -183,6 +183,6 @@ resource "aws_glue_catalog_table" "raw_hourly_observation" {
 
   partition_keys {
     name = "observation_date"
-    type = "date"
+    type = "string"
   }
 }

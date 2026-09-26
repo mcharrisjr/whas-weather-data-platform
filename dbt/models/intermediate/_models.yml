@@ -32,8 +32,8 @@ models:
   - name: int_latest_hourly_forecast
     description: Latest hourly weather forecasts.
     columns:
-      - name: forecasted_for_local
-        description: Forecasted for datetime in local time zone (America/New_York).
+      - name: forecasted_for
+        description: Forecasted for datetime.
         tests:
           - not_null
       - name: temperature_f
@@ -73,8 +73,8 @@ models:
   - name: int_hourly_observation
     description: Hourly weather observations.
     columns:
-      - name: observed_at_local
-        description: Observed at datetime in local time zone (America/New_York).
+      - name: observed_at
+        description: Observed at datetime.
         tests:
           - unique
           - not_null

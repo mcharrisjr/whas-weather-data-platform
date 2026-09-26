@@ -31,7 +31,7 @@ def test_parse_hourly_weather_forecasts(weather_soup: Tag) -> None:
     utc_tz = ZoneInfo("UTC")
     expected = HourlyWeatherForecast(
         forecasted_for=dt.datetime(
-            2026, 9, 21, 13, tzinfo=ZoneInfo("America/New_York")
+            2026, 9, 21, 17, tzinfo=utc_tz
         ),
         temperature_f=84,
         chance_of_precipitation=0.15,
@@ -58,7 +58,7 @@ def test_parse_hourly_weather_forecasts(weather_soup: Tag) -> None:
 
 
 def test_parse_forecasted_for(weather_row: Tag) -> None:
-    expected = dt.datetime(2026, 9, 21, 13, tzinfo=ZoneInfo("America/New_York"))
+    expected = dt.datetime(2026, 9, 21, 17, tzinfo=ZoneInfo("UTC"))
     actual = _parse_forecasted_for(weather_row, current_date=dt.date(2026, 9, 21))
 
     assert actual == expected

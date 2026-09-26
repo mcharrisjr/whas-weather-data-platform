@@ -55,7 +55,7 @@ def _parse_forecasted_for(weather_row: Tag, *, current_date: dt.date) -> dt.date
         .time()
     )
 
-    return dt.datetime.combine(current_date, forecasted_for).replace(tzinfo=eastern_tz)
+    return dt.datetime.combine(current_date, forecasted_for).replace(tzinfo=eastern_tz).astimezone(ZoneInfo("UTC"))
 
 
 def _parse_temperature(weather_row: Tag) -> int:

@@ -50,6 +50,7 @@ def _parse_forecast_date(weather_row: Tag, *, current_year: int) -> dt.date:
     forecast_date = (
         dt.datetime.strptime(f"{forecast_date_str} {current_year}", "%b %d %Y")
         .replace(tzinfo=ZoneInfo("America/New_York"))
+        .astimezone(ZoneInfo("UTC"))
         .date()
     )
 

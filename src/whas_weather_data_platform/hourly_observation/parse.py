@@ -23,7 +23,7 @@ def parse_hourly_weather_observation(html: str) -> HourlyWeatherObservation:
     wind_speed_mph, wind_direction = _parse_wind(soup)
 
     return HourlyWeatherObservation(
-        observed_at=scraped_at.astimezone(ZoneInfo("America/New_York")),
+        observed_at=scraped_at,
         temperature_f=_parse_temperature(soup),
         feels_like_f=_parse_feels_like(soup),
         humidity=_parse_humidity(soup),

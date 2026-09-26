@@ -1,9 +1,9 @@
 SELECT
-    CAST(forecast_date AS DATE) AS forecast_date,
     CAST(high_temperature_f AS INTEGER) AS high_temperature_f,
     CAST(low_temperature_f AS INTEGER) AS low_temperature_f,
     CAST(chance_of_precipitation AS DOUBLE) AS chance_of_precipitation,
     CAST(wind_speed_mph AS INTEGER) AS wind_speed_mph,
     wind_direction,
-    CAST(FROM_ISO8601_TIMESTAMP(scraped_at) AS TIMESTAMP) AS scraped_at
+    CAST(FROM_ISO8601_TIMESTAMP(scraped_at) AS TIMESTAMP) AS scraped_at,
+    FROM_ISO8601_DATE(forecast_date) AS forecast_date
 FROM {{ source('raw', 'daily_forecast') }}
