@@ -81,7 +81,7 @@ resource "aws_glue_catalog_table" "raw_daily_forecast" {
 
     columns {
       name = "forecast_date"
-      type = "date"
+      type = "string"
     }
 
     columns {
