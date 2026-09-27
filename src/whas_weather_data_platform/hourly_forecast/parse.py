@@ -19,7 +19,7 @@ def parse_hourly_weather_forecasts(html: str) -> list[HourlyWeatherForecast]:
     soup = BeautifulSoup(html, "html.parser")
 
     scraped_at = dt.datetime.now(tz=ZoneInfo("UTC"))
-    current_date = scraped_at.date()
+    current_date = scraped_at.astimezone(ZoneInfo("America/New_York")).date()
 
     hourly_weather_forecasts: list[HourlyWeatherForecast] = []
 
@@ -41,22 +41,34 @@ def parse_hourly_weather_forecasts(html: str) -> list[HourlyWeatherForecast]:
 
 
 def _parse_forecasted_for(weather_row: Tag, *, current_date: dt.date) -> dt.datetime:
-    forecasted_for_str = ensure_find(
+    forecasted_for_hour = ensure_find(
         weather_row,
         "span",
         class_="weather-hourly__hour weather-hourly__hour_visible_true",
     ).text
 
+    forecast_weekday = ensure_find(
+        weather_row,
+        "span",
+        class_="weather-hourly__day weather-hourly__day_visible_true",
+    ).text
+
+    if current_date.strftime("%a") != forecast_weekday:
+        tomorrow = current_date + dt.timedelta(days=1)
+        forecasted_for_date = tomorrow
+    else:
+        forecasted_for_date = current_date
+
     eastern_tz = ZoneInfo("America/New_York")
 
-    forecasted_for = (
-        dt.datetime.strptime(forecasted_for_str, "%I %p")
+    forecasted_for_time = (
+        dt.datetime.strptime(forecasted_for_hour, "%I %p")
         .replace(tzinfo=eastern_tz)
         .time()
     )
 
     return (
-        dt.datetime.combine(current_date, forecasted_for)
+        dt.datetime.combine(forecasted_for_date, forecasted_for_time)
         .replace(tzinfo=eastern_tz)
         .astimezone(ZoneInfo("UTC"))
     )
