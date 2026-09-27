@@ -1,6 +1,6 @@
 resource "aws_scheduler_schedule" "hourly" {
   name                         = "${var.project_name}-hourly"
-  schedule_expression          = "cron(5 * * * ? *)"
+  schedule_expression          = "cron(30 * * * ? *)"
   schedule_expression_timezone = "America/New_York"
   state                        = "ENABLED"
 
@@ -16,7 +16,7 @@ resource "aws_scheduler_schedule" "hourly" {
 
 resource "aws_scheduler_schedule" "daily" {
   name                         = "${var.project_name}-daily"
-  schedule_expression          = "cron(5 0 * * ? *)"
+  schedule_expression          = "cron(30 0 * * ? *)"
   schedule_expression_timezone = "America/New_York"
   state                        = "ENABLED"
 
