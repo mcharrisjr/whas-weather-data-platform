@@ -24,7 +24,7 @@ resource "aws_ecs_task_definition" "scrape_ecs_tasks" {
       image     = "${aws_ecr_repository.repositories["scrape"].repository_url}:${var.image_tag}"
       essential = true
       environment = [
-        { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.raw.name },
+        { "name" : "WHAS_WEATHER_RAW_GLUE_CATALOG_DATABASE", "value" : aws_glue_catalog_database.databases["raw"].name },
         { "name" : "WHAS_WEATHER_RAW_S3_BUCKET", "value" : aws_s3_bucket.buckets["raw"].bucket },
       ]
       command = each.value

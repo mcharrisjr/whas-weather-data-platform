@@ -32,7 +32,7 @@ resource "aws_sfn_state_machine" "daily" {
         Resource = "arn:aws:states:::athena:startQueryExecution.sync"
 
         Parameters = {
-          QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.raw.name}.${aws_glue_catalog_table.raw_daily_forecast.name}"
+          QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.databases["raw"].name}.${aws_glue_catalog_table.tables["raw_daily_forecast"].name}"
           WorkGroup   = "primary"
 
           ResultConfiguration = {
@@ -150,7 +150,7 @@ resource "aws_sfn_state_machine" "hourly" {
                 Resource = "arn:aws:states:::athena:startQueryExecution.sync"
 
                 Parameters = {
-                  QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.raw.name}.${aws_glue_catalog_table.raw_hourly_forecast.name}"
+                  QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.databases["raw"].name}.${aws_glue_catalog_table.tables["raw_hourly_forecast"].name}"
                   WorkGroup   = "primary"
 
                   ResultConfiguration = {
@@ -172,7 +172,7 @@ resource "aws_sfn_state_machine" "hourly" {
                 Resource = "arn:aws:states:::athena:startQueryExecution.sync"
 
                 Parameters = {
-                  QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.raw.name}.${aws_glue_catalog_table.raw_hourly_observation.name}"
+                  QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.databases["raw"].name}.${aws_glue_catalog_table.tables["raw_hourly_observation"].name}"
                   WorkGroup   = "primary"
 
                   ResultConfiguration = {

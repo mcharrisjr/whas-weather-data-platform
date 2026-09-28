@@ -24,9 +24,9 @@ data "aws_iam_policy_document" "raw_bucket_write" {
   statement {
     actions = ["s3:PutObject"]
     resources = [
-      "${aws_s3_bucket.buckets["raw"].arn}/${local.raw_database_name}_${local.raw_hourly_forecast_table_name}/*",
-      "${aws_s3_bucket.buckets["raw"].arn}/${local.raw_database_name}_${local.raw_daily_forecast_table_name}/*",
-      "${aws_s3_bucket.buckets["raw"].arn}/${local.raw_database_name}_${local.raw_hourly_observation_table_name}/*",
+      "${aws_s3_bucket.buckets["raw"].arn}/${aws_glue_catalog_database.databases["raw"].name}_${aws_glue_catalog_table.tables["raw_hourly_forecast"].name}/*",
+      "${aws_s3_bucket.buckets["raw"].arn}/${aws_glue_catalog_database.databases["raw"].name}_${aws_glue_catalog_table.tables["raw_daily_forecast"].name}/*",
+      "${aws_s3_bucket.buckets["raw"].arn}/${aws_glue_catalog_database.databases["raw"].name}_${aws_glue_catalog_table.tables["raw_hourly_observation"].name}/*",
     ]
   }
 }
@@ -260,10 +260,10 @@ data "aws_iam_policy_document" "step_function" {
     ]
     resources = [
       "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:catalog",
-      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:database/${aws_glue_catalog_database.raw.name}",
-      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.raw.name}/${aws_glue_catalog_table.raw_hourly_forecast.name}",
-      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.raw.name}/${aws_glue_catalog_table.raw_daily_forecast.name}",
-      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.raw.name}/${aws_glue_catalog_table.raw_hourly_observation.name}",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:database/${aws_glue_catalog_database.databases["raw"].name}",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.databases["raw"].name}/${aws_glue_catalog_table.tables["raw_hourly_forecast"].name}",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.databases["raw"].name}/${aws_glue_catalog_table.tables["raw_daily_forecast"].name}",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.databases["raw"].name}/${aws_glue_catalog_table.tables["raw_hourly_observation"].name}",
     ]
   }
 }

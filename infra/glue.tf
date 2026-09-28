@@ -1,26 +1,79 @@
-resource "aws_glue_catalog_database" "raw" {
-  name = local.raw_database_name
+locals {
+  databases = {
+    raw          = { name = "${local.project_slug}_raw" }
+    staging      = { name = "${local.project_slug}_staging" }
+    intermediate = { name = "${local.project_slug}_intermediate" }
+    mart         = { name = "${local.project_slug}_mart" }
+  }
+
+  tables = {
+    raw_hourly_forecast = {
+      name              = "hourly_forecast"
+      external_location = "s3://${aws_s3_bucket.buckets["raw"].bucket}/${aws_glue_catalog_database.databases["raw"].name}_hourly_forecast/"
+      columns = [
+        { name = "forecasted_for", type = "string" },
+        { name = "temperature_f", type = "int" },
+        { name = "chance_of_precipitation", type = "double" },
+        { name = "wind_speed_mph", type = "int" },
+        { name = "wind_direction", type = "string" },
+        { name = "scraped_at", type = "string" },
+      ]
+      partition_keys = [
+        { name = "scraped_date", type = "string" },
+      ]
+    }
+    raw_daily_forecast = {
+      name              = "daily_forecast"
+      external_location = "s3://${aws_s3_bucket.buckets["raw"].bucket}/${aws_glue_catalog_database.databases["raw"].name}_daily_forecast/"
+      columns = [
+        { name = "forecast_date", type = "string" },
+        { name = "high_temperature_f", type = "int" },
+        { name = "low_temperature_f", type = "int" },
+        { name = "chance_of_precipitation", type = "double" },
+        { name = "wind_speed_mph", type = "int" },
+        { name = "wind_direction", type = "string" },
+        { name = "scraped_at", type = "string" },
+      ]
+      partition_keys = [
+        { name = "scraped_date", type = "string" },
+      ]
+    }
+    raw_hourly_observation = {
+      name              = "hourly_observation"
+      external_location = "s3://${aws_s3_bucket.buckets["raw"].bucket}/${aws_glue_catalog_database.databases["raw"].name}_hourly_observation/"
+      columns = [
+        { name = "observed_at", type = "string" },
+        { name = "temperature_f", type = "int" },
+        { name = "feels_like_f", type = "int" },
+        { name = "humidity", type = "double" },
+        { name = "chance_of_precipitation", type = "double" },
+        { name = "wind_speed_mph", type = "int" },
+        { name = "wind_direction", type = "string" },
+        { name = "condition_", type = "string" },
+        { name = "scraped_at", type = "string" },
+      ]
+      partition_keys = [
+        { name = "observation_date", type = "string" },
+      ]
+    }
+  }
 }
 
-resource "aws_glue_catalog_database" "staging" {
-  name = local.staging_database_name
+resource "aws_glue_catalog_database" "databases" {
+  for_each = local.databases
+
+  name = each.value.name
 }
 
-resource "aws_glue_catalog_database" "intermediate" {
-  name = local.intermediate_database_name
-}
+resource "aws_glue_catalog_table" "tables" {
+  for_each = local.tables
 
-resource "aws_glue_catalog_database" "mart" {
-  name = local.mart_database_name
-}
-
-resource "aws_glue_catalog_table" "raw_hourly_forecast" {
-  name          = local.raw_hourly_forecast_table_name
-  database_name = aws_glue_catalog_database.raw.name
+  name          = each.value.name
+  database_name = aws_glue_catalog_database.databases["raw"].name
   table_type    = "EXTERNAL_TABLE"
 
   storage_descriptor {
-    location      = "s3://${aws_s3_bucket.buckets["raw"].bucket}/${aws_glue_catalog_database.raw.name}_${local.raw_hourly_forecast_table_name}/"
+    location      = each.value.external_location
     input_format  = "org.apache.hadoop.mapred.TextInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 
@@ -28,161 +81,20 @@ resource "aws_glue_catalog_table" "raw_hourly_forecast" {
       serialization_library = "org.apache.hive.hcatalog.data.JsonSerDe"
     }
 
-    columns {
-      name = "forecasted_for"
-      type = "string"
-    }
-
-    columns {
-      name = "temperature_f"
-      type = "int"
-    }
-
-    columns {
-      name = "chance_of_precipitation"
-      type = "double"
-    }
-
-    columns {
-      name = "wind_speed_mph"
-      type = "int"
-    }
-
-    columns {
-      name = "wind_direction"
-      type = "string"
-    }
-
-    columns {
-      name = "scraped_at"
-      type = "string"
+    dynamic "columns" {
+      for_each = each.value.columns
+      content {
+        name = columns.value.name
+        type = columns.value.type
+      }
     }
   }
 
-  partition_keys {
-    name = "scraped_date"
-    type = "string"
-  }
-}
-
-resource "aws_glue_catalog_table" "raw_daily_forecast" {
-  name          = local.raw_daily_forecast_table_name
-  database_name = aws_glue_catalog_database.raw.name
-  table_type    = "EXTERNAL_TABLE"
-
-  storage_descriptor {
-    location      = "s3://${aws_s3_bucket.buckets["raw"].bucket}/${aws_glue_catalog_database.raw.name}_${local.raw_daily_forecast_table_name}/"
-    input_format  = "org.apache.hadoop.mapred.TextInputFormat"
-    output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
-
-    ser_de_info {
-      serialization_library = "org.apache.hive.hcatalog.data.JsonSerDe"
+  dynamic "partition_keys" {
+    for_each = each.value.partition_keys
+    content {
+      name = partition_keys.value.name
+      type = partition_keys.value.type
     }
-
-    columns {
-      name = "forecast_date"
-      type = "string"
-    }
-
-    columns {
-      name = "high_temperature_f"
-      type = "int"
-    }
-
-    columns {
-      name = "low_temperature_f"
-      type = "int"
-    }
-
-    columns {
-      name = "chance_of_precipitation"
-      type = "double"
-    }
-
-    columns {
-      name = "wind_speed_mph"
-      type = "int"
-    }
-
-    columns {
-      name = "wind_direction"
-      type = "string"
-    }
-
-    columns {
-      name = "scraped_at"
-      type = "string"
-    }
-  }
-
-  partition_keys {
-    name = "scraped_date"
-    type = "string"
-  }
-}
-
-resource "aws_glue_catalog_table" "raw_hourly_observation" {
-  name          = local.raw_hourly_observation_table_name
-  database_name = aws_glue_catalog_database.raw.name
-  table_type    = "EXTERNAL_TABLE"
-
-  storage_descriptor {
-    location      = "s3://${aws_s3_bucket.buckets["raw"].bucket}/${aws_glue_catalog_database.raw.name}_${local.raw_hourly_observation_table_name}/"
-    input_format  = "org.apache.hadoop.mapred.TextInputFormat"
-    output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
-
-    ser_de_info {
-      serialization_library = "org.apache.hive.hcatalog.data.JsonSerDe"
-    }
-
-    columns {
-      name = "observed_at"
-      type = "string"
-    }
-
-    columns {
-      name = "temperature_f"
-      type = "int"
-    }
-
-    columns {
-      name = "feels_like_f"
-      type = "int"
-    }
-
-    columns {
-      name = "humidity"
-      type = "double"
-    }
-
-    columns {
-      name = "chance_of_precipitation"
-      type = "double"
-    }
-
-    columns {
-      name = "wind_speed_mph"
-      type = "int"
-    }
-
-    columns {
-      name = "wind_direction"
-      type = "string"
-    }
-
-    columns {
-      name = "condition_"
-      type = "string"
-    }
-
-    columns {
-      name = "scraped_at"
-      type = "string"
-    }
-  }
-
-  partition_keys {
-    name = "observation_date"
-    type = "string"
   }
 }
