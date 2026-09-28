@@ -79,14 +79,14 @@ data "aws_iam_policy_document" "dbt_build" {
     ]
     resources = [
       "${local.glue_arn_prefix}:catalog",
-      "${local.glue_arn_prefix}:database/${local.raw_database_name}",
-      "${local.glue_arn_prefix}:database/${local.staging_database_name}",
-      "${local.glue_arn_prefix}:database/${local.intermediate_database_name}",
-      "${local.glue_arn_prefix}:database/${local.mart_database_name}",
-      "${local.glue_arn_prefix}:table/${local.raw_database_name}/*",
-      "${local.glue_arn_prefix}:table/${local.staging_database_name}/*",
-      "${local.glue_arn_prefix}:table/${local.intermediate_database_name}/*",
-      "${local.glue_arn_prefix}:table/${local.mart_database_name}/*",
+      "${local.glue_arn_prefix}:database/${aws_glue_catalog_database.databases["raw"].name}",
+      "${local.glue_arn_prefix}:database/${aws_glue_catalog_database.databases["staging"].name}",
+      "${local.glue_arn_prefix}:database/${aws_glue_catalog_database.databases["intermediate"].name}",
+      "${local.glue_arn_prefix}:database/${aws_glue_catalog_database.databases["mart"].name}",
+      "${local.glue_arn_prefix}:table/${aws_glue_catalog_database.databases["raw"].name}/*",
+      "${local.glue_arn_prefix}:table/${aws_glue_catalog_database.databases["staging"].name}/*",
+      "${local.glue_arn_prefix}:table/${aws_glue_catalog_database.databases["intermediate"].name}/*",
+      "${local.glue_arn_prefix}:table/${aws_glue_catalog_database.databases["mart"].name}/*",
     ]
   }
 

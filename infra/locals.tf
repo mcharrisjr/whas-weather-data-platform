@@ -4,15 +4,6 @@ locals {
 
   project_slug = replace(var.project_name, "-", "_")
 
-  raw_database_name          = "${local.project_slug}_raw"
-  staging_database_name      = "${local.project_slug}_staging"
-  intermediate_database_name = "${local.project_slug}_intermediate"
-  mart_database_name         = "${local.project_slug}_mart"
-
-  raw_hourly_forecast_table_name    = "hourly_forecast"
-  raw_daily_forecast_table_name     = "daily_forecast"
-  raw_hourly_observation_table_name = "hourly_observation"
-
   scrape_ecs_tasks = {
     "${var.project_name}-scrape-hourly-weather-forecast" : ["--type", "forecast", "--frequency", "hourly"],
     "${var.project_name}-scrape-daily-weather-forecast" : ["--type", "forecast", "--frequency", "daily"],
