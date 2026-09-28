@@ -1,11 +1,18 @@
 locals {
-  ecr_repositories = toset(["${var.project_name}/scrape", "${var.project_name}/dbt-build"])
+  ecr_repositories = {
+    scrape = {
+      name = "${var.project_name}/scrape"
+    }
+    dbt = {
+      name = "${var.project_name}/dbt-build"
+    }
+  }
 }
 
 resource "aws_ecr_repository" "repositories" {
   for_each = local.ecr_repositories
 
-  name                 = each.value
+  name                 = each.value.name
   image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
@@ -29,6 +36,6 @@ data "aws_ecr_lifecycle_policy_document" "keep_five_images" {
 resource "aws_ecr_lifecycle_policy" "policies" {
   for_each = local.ecr_repositories
 
-  repository = aws_ecr_repository.repositories["${each.value}"].name
+  repository = aws_ecr_repository.repositories[each.key].name
   policy     = data.aws_ecr_lifecycle_policy_document.keep_five_images.json
 }
