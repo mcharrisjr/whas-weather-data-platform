@@ -36,7 +36,7 @@ resource "aws_sfn_state_machine" "daily" {
           WorkGroup   = "primary"
 
           ResultConfiguration = {
-            OutputLocation = "s3://${aws_s3_bucket.buckets["${var.project_name}-athena-query-results-${local.aws_account_id}-${local.aws_region}-an"].bucket}/"
+            OutputLocation = "s3://${aws_s3_bucket.buckets["athena_query_results"].bucket}/"
           }
         }
 
@@ -154,7 +154,7 @@ resource "aws_sfn_state_machine" "hourly" {
                   WorkGroup   = "primary"
 
                   ResultConfiguration = {
-                    OutputLocation = "s3://${aws_s3_bucket.buckets["${var.project_name}-athena-query-results-${local.aws_account_id}-${local.aws_region}-an"].bucket}/"
+                    OutputLocation = "s3://${aws_s3_bucket.buckets["athena_query_results"].bucket}/"
                   }
                 }
 
@@ -176,7 +176,7 @@ resource "aws_sfn_state_machine" "hourly" {
                   WorkGroup   = "primary"
 
                   ResultConfiguration = {
-                    OutputLocation = "s3://${aws_s3_bucket.buckets["${var.project_name}-athena-query-results-${local.aws_account_id}-${local.aws_region}-an"].bucket}/"
+                    OutputLocation = "s3://${aws_s3_bucket.buckets["athena_query_results"].bucket}/"
                   }
                 }
 
