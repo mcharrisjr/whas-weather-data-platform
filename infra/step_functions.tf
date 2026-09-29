@@ -6,8 +6,8 @@ resource "aws_sfn_state_machine" "daily" {
     ecs_cluster_arn                   = aws_ecs_cluster.main.arn
     scrape_ecs_task_definition_arn    = aws_ecs_task_definition.scrape_ecs_tasks["${var.project_name}-scrape-daily-weather-forecast"].arn
     dbt_build_ecs_task_definition_arn = aws_ecs_task_definition.dbt_build.arn
-    subnets                           = [aws_subnet.public.id]
-    security_groups                   = [aws_security_group.ecs_task.id]
+    subnet                            = aws_subnet.public.id
+    security_group                    = aws_security_group.ecs_task.id
     raw_database_name                 = aws_glue_catalog_database.databases["raw"].name
     raw_daily_forecast_table_name     = aws_glue_catalog_table.tables["raw_daily_forecast"].name
     athena_query_results_bucket       = aws_s3_bucket.buckets["athena_query_results"].bucket
@@ -24,8 +24,8 @@ resource "aws_sfn_state_machine" "hourly" {
     scrape_forecast_ecs_task_definition_arn    = aws_ecs_task_definition.scrape_ecs_tasks["${var.project_name}-scrape-hourly-weather-forecast"].arn
     scrape_observation_ecs_task_definition_arn = aws_ecs_task_definition.scrape_ecs_tasks["${var.project_name}-scrape-hourly-weather-observation"].arn
     dbt_build_ecs_task_definition_arn          = aws_ecs_task_definition.dbt_build.arn
-    subnets                                    = [aws_subnet.public.id]
-    security_groups                            = [aws_security_group.ecs_task.id]
+    subnet                                     = aws_subnet.public.id
+    security_group                             = aws_security_group.ecs_task.id
     raw_database_name                          = aws_glue_catalog_database.databases["raw"].name
     raw_hourly_forecast_table_name             = aws_glue_catalog_table.tables["raw_hourly_forecast"].name
     raw_hourly_observation_table_name          = aws_glue_catalog_table.tables["raw_hourly_observation"].name
