@@ -60,7 +60,7 @@
                         },
                         "RepairHourlyObservationTable": {
                             "Type": "Task",
-                            "Resource": "arn:aws:states:::athena.startQueryExecution.sync",
+                            "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
                             "Parameters": {
                                 "QueryString": "MSCK REPAIR TABLE ${raw_database_name}.${raw_hourly_observation_table_name}",
                                 "WorkGroup": "primary",
