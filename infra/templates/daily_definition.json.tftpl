@@ -10,8 +10,8 @@
                 "LaunchType": "FARGATE",
                 "NetworkConfiguration": {
                     "AwsvpcConfiguration": {
-                        "Subnets": "${subnets}",
-                        "SecurityGroups": "${security_groups}",
+                        "Subnets": "${jsonencode(subnets)}",
+                        "SecurityGroups": "${jsonencode(security_groups)}",
                         "AssignPublicIp": "ENABLED"
                     }
                 }
@@ -39,8 +39,8 @@
                 "LaunchType": "FARGATE",
                 "NetworkConfiguration": {
                     "AwsvpcConfiguration": {
-                        "Subnets": "${subnets}",
-                        "SecurityGroups": "${security_groups}",
+                        "Subnets": "${jsonencode(subnets)}",
+                        "SecurityGroups": "${jsonencode(security_groups)}",
                         "AssignPublicIp": "ENABLED"
                     }
                 }
@@ -49,5 +49,3 @@
         }
     }
 }
-            
-
