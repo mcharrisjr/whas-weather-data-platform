@@ -2,213 +2,34 @@ resource "aws_sfn_state_machine" "daily" {
   name     = "${var.project_name}-daily"
   role_arn = aws_iam_role.step_function.arn
 
-  definition = jsonencode({
-    StartAt = "ScrapeDailyForecast"
-
-    States = {
-      ScrapeDailyForecast = {
-        Type     = "Task"
-        Resource = "arn:aws:states:::ecs:runTask.sync"
-
-        Parameters = {
-          Cluster        = aws_ecs_cluster.main.arn
-          TaskDefinition = aws_ecs_task_definition.scrape_ecs_tasks["${var.project_name}-scrape-daily-weather-forecast"].arn
-          LaunchType     = "FARGATE"
-
-          NetworkConfiguration = {
-            AwsvpcConfiguration = {
-              Subnets        = [aws_subnet.public.id]
-              SecurityGroups = [aws_security_group.ecs_task.id]
-              AssignPublicIp = "ENABLED"
-            }
-          }
-        }
-
-        Next = "RepairDailyForecast"
-      }
-
-      RepairDailyForecast = {
-        Type     = "Task"
-        Resource = "arn:aws:states:::athena:startQueryExecution.sync"
-
-        Parameters = {
-          QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.databases["raw"].name}.${aws_glue_catalog_table.tables["raw_daily_forecast"].name}"
-          WorkGroup   = "primary"
-
-          ResultConfiguration = {
-            OutputLocation = "s3://${aws_s3_bucket.buckets["athena_query_results"].bucket}/"
-          }
-        }
-
-        Next = "DbtBuild"
-      }
-
-      DbtBuild = {
-        Type     = "Task"
-        Resource = "arn:aws:states:::ecs:runTask.sync"
-
-        Parameters = {
-          Cluster        = aws_ecs_cluster.main.arn
-          TaskDefinition = aws_ecs_task_definition.dbt_build.arn
-          LaunchType     = "FARGATE"
-
-          NetworkConfiguration = {
-            AwsvpcConfiguration = {
-              Subnets        = [aws_subnet.public.id]
-              SecurityGroups = [aws_security_group.ecs_task.id]
-              AssignPublicIp = "ENABLED"
-            }
-          }
-        }
-
-        End = true
-      }
-    }
+  definition = templatefile("${path.module}/templates/daily_definition.json.tftpl", {
+    ecs_cluster_arn                   = aws_ecs_cluster.main.arn
+    scrape_ecs_task_definition_arn    = aws_ecs_task_definition.scrape_ecs_tasks["${var.project_name}-scrape-daily-weather-forecast"].arn
+    dbt_build_ecs_task_definition_arn = aws_ecs_task_definition.dbt_build.arn
+    subnets                           = jsonencode([aws_subnet.public.id])
+    security_groups                   = jsonencode([aws_security_group.ecs_task.id])
+    raw_database_name                 = aws_glue_catalog_database.databases["raw"].name
+    raw_daily_forecast_table_name     = aws_glue_catalog_table.tables["raw_daily_forecast"].name
+    athena_query_results_bucket       = aws_s3_bucket.buckets["athena_query_results"].bucket
   })
 }
+
 
 resource "aws_sfn_state_machine" "hourly" {
   name     = "${var.project_name}-hourly"
   role_arn = aws_iam_role.step_function.arn
 
-  definition = jsonencode({
-    StartAt = "ScrapeInParallel"
-
-    States = {
-      ScrapeInParallel = {
-        Type = "Parallel"
-
-        Branches = [
-          {
-            StartAt = "ScrapeHourlyForecast"
-
-            States = {
-              ScrapeHourlyForecast = {
-                Type     = "Task"
-                Resource = "arn:aws:states:::ecs:runTask.sync"
-
-                Parameters = {
-                  Cluster        = aws_ecs_cluster.main.arn
-                  TaskDefinition = aws_ecs_task_definition.scrape_ecs_tasks["${var.project_name}-scrape-hourly-weather-forecast"].arn
-                  LaunchType     = "FARGATE"
-
-                  NetworkConfiguration = {
-                    AwsvpcConfiguration = {
-                      Subnets        = [aws_subnet.public.id]
-                      SecurityGroups = [aws_security_group.ecs_task.id]
-                      AssignPublicIp = "ENABLED"
-                    }
-                  }
-                }
-
-                End = true
-              }
-            }
-          },
-
-          {
-            StartAt = "ScrapeHourlyObservation"
-
-            States = {
-              ScrapeHourlyObservation = {
-                Type     = "Task"
-                Resource = "arn:aws:states:::ecs:runTask.sync"
-
-                Parameters = {
-                  Cluster        = aws_ecs_cluster.main.arn
-                  TaskDefinition = aws_ecs_task_definition.scrape_ecs_tasks["${var.project_name}-scrape-hourly-weather-observation"].arn
-                  LaunchType     = "FARGATE"
-
-                  NetworkConfiguration = {
-                    AwsvpcConfiguration = {
-                      Subnets        = [aws_subnet.public.id]
-                      SecurityGroups = [aws_security_group.ecs_task.id]
-                      AssignPublicIp = "ENABLED"
-                    }
-                  }
-                }
-
-                End = true
-              }
-            }
-          }
-        ]
-
-        Next = "RepairInParallel"
-      }
-
-      RepairInParallel = {
-        Type = "Parallel"
-
-        Branches = [
-          {
-            StartAt = "RepairHourlyForecast"
-
-            States = {
-              RepairHourlyForecast = {
-                Type     = "Task"
-                Resource = "arn:aws:states:::athena:startQueryExecution.sync"
-
-                Parameters = {
-                  QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.databases["raw"].name}.${aws_glue_catalog_table.tables["raw_hourly_forecast"].name}"
-                  WorkGroup   = "primary"
-
-                  ResultConfiguration = {
-                    OutputLocation = "s3://${aws_s3_bucket.buckets["athena_query_results"].bucket}/"
-                  }
-                }
-
-                End = true
-              }
-            }
-          },
-
-          {
-            StartAt = "RepairHourlyObservation"
-
-            States = {
-              RepairHourlyObservation = {
-                Type     = "Task"
-                Resource = "arn:aws:states:::athena:startQueryExecution.sync"
-
-                Parameters = {
-                  QueryString = "MSCK REPAIR TABLE ${aws_glue_catalog_database.databases["raw"].name}.${aws_glue_catalog_table.tables["raw_hourly_observation"].name}"
-                  WorkGroup   = "primary"
-
-                  ResultConfiguration = {
-                    OutputLocation = "s3://${aws_s3_bucket.buckets["athena_query_results"].bucket}/"
-                  }
-                }
-
-                End = true
-              }
-            }
-          }
-        ]
-
-        Next = "DbtBuild"
-      }
-
-      DbtBuild = {
-        Type     = "Task"
-        Resource = "arn:aws:states:::ecs:runTask.sync"
-
-        Parameters = {
-          Cluster        = aws_ecs_cluster.main.arn
-          TaskDefinition = aws_ecs_task_definition.dbt_build.arn
-          LaunchType     = "FARGATE"
-
-          NetworkConfiguration = {
-            AwsvpcConfiguration = {
-              Subnets        = [aws_subnet.public.id]
-              SecurityGroups = [aws_security_group.ecs_task.id]
-              AssignPublicIp = "ENABLED"
-            }
-          }
-        }
-
-        End = true
-      }
-    }
+  definition = templatefile("${path.module}/templates/hourly_definition.json.tftpl", {
+    ecs_cluster_arn                            = aws_ecs_cluster.main.arn
+    scrape_forecast_ecs_task_definition_arn    = aws_ecs_task_definition.scrape_ecs_tasks["${var.project_name}-scrape-hourly-weather-forecast"].arn
+    scrape_observation_ecs_task_definition_arn = aws_ecs_task_definition.scrape_ecs_tasks["${var.project_name}-scrape-hourly-weather-observation"].arn
+    dbt_build_ecs_task_definition_arn          = aws_ecs_task_definition.dbt_build.arn
+    subnets                                    = jsonencode([aws_subnet.public.id])
+    security_groups                            = jsonencode([aws_security_group.ecs_task.id])
+    raw_database_name                          = aws_glue_catalog_database.databases["raw"].name
+    raw_hourly_forecast_table_name             = aws_glue_catalog_table.tables["raw_hourly_forecast"].name
+    raw_hourly_observation_table_name          = aws_glue_catalog_table.tables["raw_hourly_observation"].name
+    athena_query_results_bucket                = aws_s3_bucket.buckets["athena_query_results"].bucket
   })
 }
+

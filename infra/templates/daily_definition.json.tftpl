@@ -1,0 +1,53 @@
+{
+    "StartAt": "ScrapeDailyForecast",
+    "States": {
+        "ScrapeDailyForecast": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::ecs:runTask.sync",
+            "Parameters": {
+                "Cluster": "${ecs_cluster_arn}",
+                "TaskDefinition": "${scrape_ecs_task_definition_arn}",
+                "LaunchType": "FARGATE",
+                "NetworkConfiguration": {
+                    "AwsvpcConfiguration": {
+                        "Subnets": "${subnets}",
+                        "SecurityGroups": "${security_groups}",
+                        "AssignPublicIp": "ENABLED"
+                    }
+                }
+            },
+            "Next": "RepairDailyForecastTable"
+        },
+        "RepairDailyForecastTable": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+            "Parameters": {
+                "QueryString": "MSCK REPAIR TABLE ${raw_database_name}.${raw_daily_forecast_table_name}",
+                "WorkGroup": "primary",
+                "ResultConfiguration": {
+                    "OutputLocation": "s3://${athena_query_results_bucket}/"
+                }
+            },
+            "Next": "DbtBuild"
+        },
+        "DbtBuild": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::ecs:runTask.sync",
+            "Parameters": {
+                "Cluster": "${ecs_cluster_arn}",
+                "TaskDefinition": "${dbt_build_ecs_task_definition_arn}",
+                "LaunchType": "FARGATE",
+                "NetworkConfiguration": {
+                    "AwsvpcConfiguration": {
+                        "Subnets": "${subnets}",
+                        "SecurityGroups": "${security_groups}",
+                        "AssignPublicIp": "ENABLED"
+                    }
+                }
+            },
+            "End": true
+        }
+    }
+}
+            
+

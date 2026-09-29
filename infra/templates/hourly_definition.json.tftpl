@@ -1,0 +1,96 @@
+{
+    "StartAt": "ScrapeInParallel",
+    "States": {
+        "ScrapeAndRepairInParallel": {
+            "Type": "Parallel",
+            "Branches": [
+                {
+                    "StartAt": "ScrapeHourlyForecast",
+                    "States": {
+                        "ScrapeHourlyForecast": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::ecs:runTask.sync",
+                            "Parameters": {
+                                "Cluster": "${ecs_cluster_arn}",
+                                "TaskDefinition": "${scrape_forecast_ecs_task_definition_arn}",
+                                "LaunchType": "FARGATE",
+                                "NetworkConfiguration": {
+                                    "AwsvpcConfiguration": {
+                                        "Subnets": "${subnets}",
+                                        "SecurityGroups": "${security_groups}",
+                                        "AssignPublicIp": "ENABLED"
+                                    }
+                                }
+                            },
+                            "Next": "RepairHourlyForecastTable"
+                        },
+                        "RepairHourlyForecastTable": {
+                            "Type": "Task", 
+                            "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+                            "Parameters": {
+                                "QueryString": "MSCK REPAIR TABLE ${raw_database_name}.${raw_hourly_forecast_table_name}",
+                                "WorkGroup": "primary",
+                                "ResultConfiguration": {
+                                    "OutputLocation": "s3://${athena_query_results_bucket}/"
+                                }
+                            },
+                            "End": true
+                        }
+                    }
+                },
+                {
+                    "StartAt": "ScrapeHourlyObservation",
+                    "States": {
+                        "ScrapeHourlyObservation": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::ecs:runTask.sync",
+                            "Parameters": {
+                                "Cluster": "${ecs_cluster_arn}",
+                                "TaskDefinition": "${scrape_observation_ecs_task_definition_arn}",
+                                "LaunchType": "FARGATE",
+                                "NetworkConfiguration": {
+                                    "AwsvpcConfiguration": {
+                                        "Subnets": "${subnets}",
+                                        "SecurityGroups": "${security_groups}",
+                                        "AssignPublicIp": "ENABLED"
+                                    }
+                                }
+                            },
+                            "Next": "RepairHourlyObservationTable"
+                        },
+                        "RepairHourlyObservationTable": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::athena.startQueryExecution.sync",
+                            "Parameters": {
+                                "QueryString": "MSCK REPAIR TABLE ${raw_database_name}.${raw_hourly_observation_table_name}",
+                                "WorkGroup": "primary",
+                                "ResultConfiguration": {
+                                    "OutputLocation": "s3://${athena_query_results_bucket}/"
+                                }
+                            },
+                            "End": true
+                        }
+                    }
+                }
+            ],
+            "Next": "DbtBuild"
+        },
+        "DbtBuild": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::ecs:runTask.sync",
+            "Parameters": {
+                "Cluster": "${ecs_cluster_arn}",
+                "TaskDefinition": "${dbt_build_ecs_task_definition_arn}",
+                "LaunchType": "FARGATE",
+                "NetworkConfiguration": {
+                    "AwsvpcConfiguration": {
+                        "Subnets": "${subnets}",
+                        "SecurityGroups": "${security_groups}",
+                        "AssignPublicIp": "ENABLED"
+                    }
+                }
+            },
+            "End": true
+        }
+    }
+}
