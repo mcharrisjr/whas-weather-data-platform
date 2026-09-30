@@ -9,47 +9,73 @@ An AWS-based weather data platform that ingests hourly and daily weather data sc
 
 ## Overview
 
-This data platform scrapes hourly weather forecasts and observations, and daily weather forecasts from [WHAS 11](https://www.whas11.com/weather/) and builds analytical datasets measuring forecasting bias at various forecast time horizons.
+This data platform scrapes hourly weather forecasts and observations, and daily weather forecasts from [WHAS 11](https://www.whas11.com/weather/) and builds analytical datasets measuring forecasting error at various forecast time horizons.
 
 - The weather data is scraped using Python and written as immutable JSON records to AWS S3.
-- dbt performs SQL transformations in AWS Athena.
+- dbt facilitates SQL transformations in AWS Athena.
 - AWS Step Functions orchestrates data ingestion and transformation.
 - Terraform provisions the AWS infrastructure.
 - GitHub Actions handles CI/CD.
 
-## Architecture
+## Data Pipelines
 
 ```mermaid
 flowchart TD
-    Scheduler[EventBridge Scheduler]
 
-    Scheduler --> Hourly[Hourly Step Function]
-    Scheduler --> Daily[Daily Step Function]
+    subgraph Hourly_Pipeline [Hourly Data Pipeline]
+        direction TB
+        
+        H_Start([Start]) --> H_Parallel
+        
+        subgraph H_Parallel [Parallel Execution]
+            direction TB
 
-    Hourly --> Scraper[ECS Fargate Scraper]
-    Daily --> Scraper
+            subgraph Forecast_Branch [Forecast Pipeline]
+                direction TB
+                ScrapeHourlyForecast[Scrape Hourly Forecast - ECS Task] --> RepairHourlyForecastTable[Repair Hourly Forecast Table - Athena Query]
+            end
 
-    Scraper --> Raw[S3 Raw Data]
+            subgraph Observation_Branch [Observation Pipeline]
+                direction TB
+                ScrapeHourlyObservation[Scrape Hourly Observation - ECS Task] --> RepairHourlyObservationTable[Repair Hourly Observation Table - Athena Query]
+            end
+        end
 
-    Raw --> Catalog[Glue Data Catalog]
-    Catalog --> dbt[ECS Fargate dbt]
+        H_Parallel --> H_DbtBuild[Dbt Build - ECS Task]
+        H_DbtBuild --> H_End([End])
+    end
 
-    dbt --> Staging[Staging Views]
-    Staging --> Intermediate[Intermediate Tables]
-    Intermediate --> Marts[Mart Tables]
+    subgraph Daily_Pipeline [Daily Data Pipeline]
+        direction TB
+        
+        D_Start([Start]) --> ScrapeDailyForecast[Scrape Daily Forecast - ECS Task]
+        ScrapeDailyForecast --> RepairDailyForecastTable[Repair Daily Forecast Table - Athena Query]
+        RepairDailyForecastTable --> D_DbtBuild[Dbt Build - ECS Task]
+        D_DbtBuild --> D_End([End])
+    end
+
+    classDef ecs fill:#FF9900,stroke:#D68100,stroke-width:2px,color:#FFF;
+    classDef athena fill:#3182CE,stroke:#2B6CB0,stroke-width:2px,color:#FFF;
+    classDef terminal fill:#2F855A,stroke:#22543D,stroke-width:2px,color:#FFF;
+
+    class H_Start,H_End,D_Start,D_End terminal;
+    class ScrapeHourlyForecast,ScrapeHourlyObservation,H_DbtBuild,ScrapeDailyForecast,D_DbtBuild ecs;
+    class RepairHourlyForecastTable,RepairHourlyObservationTable,RepairDailyForecastTable athena;
 ```
 
 ## Key Design Decisions
 
 | Decision | Choice | Rationale |
 | -------- | ------ | --------- |
-| Raw partition key(s) | `scraped_date` for forecasted weather and `observation_date` for observed weather. | Preserves historical source state (immutable) and enables date filtering downstream. |
-| Staging materialization | Views | Avoids persisting data for simple transformations. |
-| Intermediate materialization | Tables | Persists reusable derived state for downstream transformations (marts). |
-| Downstream table type | Apache Iceberg | Automically discovers new raw partitions upstream unlike Apache Hive tables. |
-| Downstream partition key(s) | None | Avoids the "small file problem".
-| Data integrity | Pydantic upstream and dbt tests downstream | Python package ensures type safety and dbt ensures `not_null` values. |
+| Raw partition key(s) | `scraped_date` for forecasted weather and `observation_date` for observed weather. | Optimizes scanning by Athena downstream.
+| Raw data types for date and time data | String | Enforce predictable JSON serialization upstream (ISO format) and allow downstream tables to handle type conversion. This separation of responsibilities is important due to differences in serialization between systems.
+| Downstream partition key(s) | None | Avoids the "small file problem" for data at this scale.
+| Intermediate table materialization | View | Table transformations are not too computationally expensive.
+| Fact table materialization | Table | Persist in physical storage to decrease latency for analytical queries.
+| Fact table type | Apache Iceberg | Automatically discovers new upstream partitions.
+| Data integrity | Pydantic and dbt tests | Former makes format of scrape data predictable and consistent. Latter validates downstream SQL transformations.
 | Orchestration | AWS Step Functions | Sequences ingestion and transformation. Managed Workflows for Apache Airflow (MWAA) is a more costly and complex alternative. |
+| Raw partition discovery | `MSCK REPAIR TABLE` Step Function state | Ensures up-to-date data downstream automatically.
 | Compute | AWS ECS Fargate | Runs containerized workloads and scales automatically. |
 
 
