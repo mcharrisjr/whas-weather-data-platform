@@ -8,5 +8,5 @@ SELECT
         f.forecasted_for
     ) AS forecast_horizon_hours
 FROM {{ ref('stg_hourly_forecast') }} AS f
-INNER JOIN {{ ref('int_hourly_observation') }} AS o
+INNER JOIN {{ ref('stg_hourly_observation') }} AS o
     ON f.forecasted_for = o.observed_at
