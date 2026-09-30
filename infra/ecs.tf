@@ -84,7 +84,6 @@ resource "aws_ecs_task_definition" "dbt_build" {
       environment = [
         { "name" : "AWS_REGION", "value" : local.aws_region },
         { "name" : "WHAS_WEATHER_ATHENA_QUERY_RESULTS_S3_BUCKET", "value" : aws_s3_bucket.buckets["athena_query_results"].bucket },
-        { "name" : "WHAS_WEATHER_INTERMEDIATE_S3_BUCKET", "value" : aws_s3_bucket.buckets["intermediate"].bucket },
         { "name" : "WHAS_WEATHER_MART_S3_BUCKET", "value" : aws_s3_bucket.buckets["mart"].bucket }
       ]
       command = local.ecs_tasks["dbt_build"].command

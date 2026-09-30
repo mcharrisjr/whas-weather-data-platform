@@ -3,9 +3,6 @@ locals {
     raw = {
       name = "${var.project_name}-raw-${local.aws_account_id}-${local.aws_region}-an"
     }
-    intermediate = {
-      name = "${var.project_name}-intermediate-${local.aws_account_id}-${local.aws_region}-an"
-    }
     mart = {
       name = "${var.project_name}-mart-${local.aws_account_id}-${local.aws_region}-an"
     }
