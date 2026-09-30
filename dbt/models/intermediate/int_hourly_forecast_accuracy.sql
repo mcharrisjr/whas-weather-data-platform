@@ -1,6 +1,7 @@
 SELECT
     f.forecasted_for,
-    o.temperature_f - f.temperature_f AS bias_temperature_f,
+    o.temperature_f - f.temperature_f AS residual_temperature_f,
+    ABS(o.temperature_f - f.temperature_f) AS abs_error_temperature_f,
     DATE_DIFF(
         'hour',
         f.scraped_at,

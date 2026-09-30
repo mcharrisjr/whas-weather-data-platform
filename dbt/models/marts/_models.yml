@@ -1,38 +1,76 @@
 version: 2
 
 models:
-  - name: mart_daily_forecast_accuracy
-    description: Daily weather forecast accuracy.
+  - name: fct_hourly_forecast_accuracy_by_horizon
+    description: Hourly weather forecast accuracy by forecast horizon.
     columns:
-      - name: forecast_date
-        description: Forecast date.
+      - name: forecast_horizon_hours
+        description: Forecast horizon in hours.
+        tests:
+          - unique
+          - not_null
+      - name: avg_residual_temperature_f
+        description: Average residual temperature in Fahrenheit.
         tests:
           - not_null
-      - name: bias_high_temperature_f
-        description: Bias of high temperature forecast in Fahrenheit.
+      - name: max_residual_temperature_f
+        description: Max residual temperature in Fahrenheit.
         tests:
           - not_null
-      - name: bias_low_temperature_f
-        description: Bias of low temperature forecast in Fahrenheit.
+      - name: avg_abs_error_temperature_f
+        description: Average absolute error of temperature forecast in Fahrenheit.
         tests:
           - not_null
-      - name: forecast_horizon_days
-        description: Forecast horizon in days.
+      - name: max_abs_error_temperature_f
+        description: Max absolute error of temperature forecast in Fahrenheit.
+        tests:
+          - not_null
+      - name: number_of_samples
+        description: Number of samples.
         tests:
           - not_null
 
-  - name: mart_hourly_forecast_accuracy
-    description: Hourly weather forecast accuracy.
+  - name: fct_daily_forecast_accuracy_by_horizon
+    description: Daily weather forecast accuracy by forecast horizon.
     columns:
-      - name: forecasted_for
-        description: Forecasted for datetime.
+      - name: forecast_horizon_days
+        description: Forecast horizon in days.
+        tests:
+          - unique
+          - not_null
+      - name: avg_residual_high_temperature_f
+        description: Average residual high temperature in Fahrenheit.
         tests:
           - not_null
-      - name: bias_temperature_f
-        description: Bias of temperature forecast in Fahrenheit.
+      - name: max_residual_high_temperature_f
+        description: Max residual high temperature in Fahrenheit.
         tests:
           - not_null
-      - name: forecast_horizon_hours
-        description: Forecast horizon in hours.
+      - name: avg_residual_low_temperature_f
+        description: Average residual low temperature in Fahrenheit.
+        tests:
+          - not_null
+      - name: max_residual_low_temperature_f
+        description: Max residual low temperature in Fahrenheit.
+        tests:
+          - not_null
+      - name: avg_abs_error_high_temperature_f
+        description: Average absolute error of high temperature forecast in Fahrenheit.
+        tests:
+          - not_null
+      - name: max_abs_error_high_temperature_f
+        description: Max absolute error of high temperature forecast in Fahrenheit.
+        tests:
+          - not_null
+      - name: avg_abs_error_low_temperature_f
+        description: Average absolute error of low temperature forecast in Fahrenheit.
+        tests:
+          - not_null
+      - name: max_abs_error_low_temperature_f
+        description: Max absolute error of low temperature forecast in Fahrenheit.
+        tests:
+          - not_null
+      - name: number_of_samples
+        description: Number of samples.
         tests:
           - not_null
