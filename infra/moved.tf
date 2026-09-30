@@ -1,34 +1,29 @@
 moved {
-  from = aws_glue_catalog_database.raw
-  to   = aws_glue_catalog_database.databases["raw"]
+  from = aws_cloudwatch_log_group.ecs_scrape_log_groups["whas-weather-scrape-hourly-weather-forecast"]
+  to   = aws_cloudwatch_log_group.log_groups["scrape_hourly_forecast"]
 }
 
 moved {
-  from = aws_glue_catalog_database.staging
-  to   = aws_glue_catalog_database.databases["staging"]
+  from = aws_cloudwatch_log_group.ecs_scrape_log_groups["whas-weather-scrape-hourly-weather-observation"]
+  to   = aws_cloudwatch_log_group.log_groups["scrape_hourly_observation"]
 }
 
 moved {
-  from = aws_glue_catalog_database.intermediate
-  to   = aws_glue_catalog_database.databases["intermediate"]
+  from = aws_cloudwatch_log_group.ecs_scrape_log_groups["whas-weather-scrape-daily-weather-forecast"]
+  to   = aws_cloudwatch_log_group.log_groups["scrape_daily_forecast"]
 }
 
 moved {
-  from = aws_glue_catalog_database.mart
-  to   = aws_glue_catalog_database.databases["mart"]
+  from = aws_ecs_task_definition.scrape_ecs_tasks["whas-weather-scrape-hourly-weather-forecast"]
+  to   = aws_ecs_task_definition.scrape_ecs_tasks["scrape_hourly_forecast"]
 }
 
 moved {
-  from = aws_glue_catalog_table.raw_hourly_forecast
-  to   = aws_glue_catalog_table.tables["raw_hourly_forecast"]
+  from = aws_ecs_task_definition.scrape_ecs_tasks["whas-weather-scrape-hourly-weather-observation"]
+  to   = aws_ecs_task_definition.scrape_ecs_tasks["scrape_hourly_observation"]
 }
 
 moved {
-  from = aws_glue_catalog_table.raw_daily_forecast
-  to   = aws_glue_catalog_table.tables["raw_daily_forecast"]
-}
-
-moved {
-  from = aws_glue_catalog_table.raw_hourly_observation
-  to   = aws_glue_catalog_table.tables["raw_hourly_observation"]
+  from = aws_ecs_task_definition.scrape_ecs_tasks["whas-weather-scrape-daily-weather-forecast"]
+  to   = aws_ecs_task_definition.scrape_ecs_tasks["scrape_daily_forecast"]
 }
