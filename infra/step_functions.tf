@@ -4,7 +4,7 @@ resource "aws_sfn_state_machine" "daily" {
 
   definition = templatefile("${path.module}/templates/daily_definition.json.tftpl", {
     ecs_cluster_arn                   = aws_ecs_cluster.main.arn
-    scrape_ecs_task_definition_arn    = aws_ecs_task_definition.scrape_ecs_tasks["${var.project_name}-scrape-daily-weather-forecast"].arn
+    scrape_ecs_task_definition_arn    = aws_ecs_task_definition.scrape_ecs_tasks["scrape_daily_forecast"].arn
     dbt_build_ecs_task_definition_arn = aws_ecs_task_definition.dbt_build.arn
     subnet                            = aws_subnet.public.id
     security_group                    = aws_security_group.ecs_task.id
@@ -21,8 +21,8 @@ resource "aws_sfn_state_machine" "hourly" {
 
   definition = templatefile("${path.module}/templates/hourly_definition.json.tftpl", {
     ecs_cluster_arn                            = aws_ecs_cluster.main.arn
-    scrape_forecast_ecs_task_definition_arn    = aws_ecs_task_definition.scrape_ecs_tasks["${var.project_name}-scrape-hourly-weather-forecast"].arn
-    scrape_observation_ecs_task_definition_arn = aws_ecs_task_definition.scrape_ecs_tasks["${var.project_name}-scrape-hourly-weather-observation"].arn
+    scrape_forecast_ecs_task_definition_arn    = aws_ecs_task_definition.scrape_ecs_tasks["scrape_hourly_forecast"].arn
+    scrape_observation_ecs_task_definition_arn = aws_ecs_task_definition.scrape_ecs_tasks["scrape_hourly_observation"].arn
     dbt_build_ecs_task_definition_arn          = aws_ecs_task_definition.dbt_build.arn
     subnet                                     = aws_subnet.public.id
     security_group                             = aws_security_group.ecs_task.id
