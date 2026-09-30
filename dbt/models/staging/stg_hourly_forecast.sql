@@ -4,5 +4,6 @@ SELECT
     CAST(wind_speed_mph AS INTEGER) AS wind_speed_mph,
     wind_direction,
     CAST(FROM_ISO8601_TIMESTAMP(forecasted_for) AS TIMESTAMP) AS forecasted_for,
-    CAST(FROM_ISO8601_TIMESTAMP(scraped_at) AS TIMESTAMP) AS scraped_at
+    CAST(FROM_ISO8601_TIMESTAMP(scraped_at) AS TIMESTAMP) AS scraped_at,
+    FROM_ISO8601_DATE(scraped_date) AS scraped_date
 FROM {{ source('raw', 'hourly_forecast') }}

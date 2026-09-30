@@ -32,6 +32,9 @@ models:
         description: Scraped at datetime.
         tests:
           - not_null
+      - name: scraped_date
+        description: Scraped date.
+          - not_null
 
   - name: stg_hourly_forecast
     description: Hourly weather forecasts.
@@ -59,6 +62,9 @@ models:
       - name: scraped_at
         description: Scraped at datetime.
         tests:
+          - not_null
+      - name: scraped_date
+        description: Scraped date.
           - not_null
 
   - name: stg_hourly_observation
@@ -101,3 +107,6 @@ models:
         description: Scraped at datetime.
         tests:
           - not_null 
+      - name: observation_date
+        description: Observation date.
+          - not_null

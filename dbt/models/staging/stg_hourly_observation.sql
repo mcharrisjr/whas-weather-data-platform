@@ -7,5 +7,6 @@ SELECT
     wind_direction,
     condition_,
     CAST(FROM_ISO8601_TIMESTAMP(observed_at) AS TIMESTAMP) AS observed_at,
-    CAST(FROM_ISO8601_TIMESTAMP(scraped_at) AS TIMESTAMP) AS scraped_at
+    CAST(FROM_ISO8601_TIMESTAMP(scraped_at) AS TIMESTAMP) AS scraped_at,
+    FROM_ISO8601_DATE(observation_date) AS observation_date
 FROM {{ source('raw', 'hourly_observation') }}
