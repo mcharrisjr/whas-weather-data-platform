@@ -1,5 +1,4 @@
 locals {
-  glue_arn_prefix             = "arn:aws:glue:${local.aws_region}:${local.aws_account_id}"
   ecs_task_execution_role_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
@@ -78,15 +77,15 @@ data "aws_iam_policy_document" "dbt_build" {
       "glue:BatchDeletePartition",
     ]
     resources = [
-      "${local.glue_arn_prefix}:catalog",
-      "${local.glue_arn_prefix}:database/${aws_glue_catalog_database.databases["raw"].name}",
-      "${local.glue_arn_prefix}:database/${aws_glue_catalog_database.databases["staging"].name}",
-      "${local.glue_arn_prefix}:database/${aws_glue_catalog_database.databases["intermediate"].name}",
-      "${local.glue_arn_prefix}:database/${aws_glue_catalog_database.databases["mart"].name}",
-      "${local.glue_arn_prefix}:table/${aws_glue_catalog_database.databases["raw"].name}/*",
-      "${local.glue_arn_prefix}:table/${aws_glue_catalog_database.databases["staging"].name}/*",
-      "${local.glue_arn_prefix}:table/${aws_glue_catalog_database.databases["intermediate"].name}/*",
-      "${local.glue_arn_prefix}:table/${aws_glue_catalog_database.databases["mart"].name}/*",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:catalog",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:database/${aws_glue_catalog_database.databases["raw"].name}",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:database/${aws_glue_catalog_database.databases["staging"].name}",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:database/${aws_glue_catalog_database.databases["intermediate"].name}",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:database/${aws_glue_catalog_database.databases["mart"].name}",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.databases["raw"].name}/*",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.databases["staging"].name}/*",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.databases["intermediate"].name}/*",
+      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.databases["mart"].name}/*",
     ]
   }
 
