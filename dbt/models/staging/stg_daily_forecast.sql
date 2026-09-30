@@ -1,4 +1,4 @@
-SELEC
+SELECT
     CAST(high_temperature_f AS INTEGER) AS high_temperature_f,
     CAST(low_temperature_f AS INTEGER) AS low_temperature_f,
     CAST(chance_of_precipitation AS DOUBLE) AS chance_of_precipitation,
