@@ -1,8 +1,8 @@
 locals {
   databases = {
-    raw          = { name = "${local.project_slug}_raw" }
-    staging      = { name = "${local.project_slug}_staging" }
-    mart         = { name = "${local.project_slug}_mart" }
+    raw     = { name = "${local.project_slug}_raw" }
+    staging = { name = "${local.project_slug}_staging" }
+    mart    = { name = "${local.project_slug}_mart" }
   }
 
   tables = {
