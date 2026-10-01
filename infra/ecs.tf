@@ -32,7 +32,7 @@ resource "aws_ecs_cluster" "main" {
 }
 
 resource "aws_ecs_task_definition" "scrape_ecs_tasks" {
-  for_each = local.ecs_tasks
+  for_each = { for k, v in local.ecs_tasks : k => v if k != "dbt_build" }
 
   family                   = each.value.family
   requires_compatibilities = ["FARGATE"]
