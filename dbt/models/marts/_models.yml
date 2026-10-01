@@ -150,6 +150,7 @@ models:
                 field: hour_key
       - name: valid_hour_key
         description: Valid hour foreign, smart key.
+        tests:
           - not_null
           - relationships:
               arguments:
