@@ -17,5 +17,5 @@ SELECT
     f.low_temperature_f AS forecasted_low_temp_f,
     o.low_temperature_f AS observed_low_temp_f
 FROM {{ ref('stg_daily_forecast') }} AS f
-LEFT JOIN daily_observation AS o
+INNER JOIN daily_observation AS o
     ON f.forecast_date = o.observation_date
