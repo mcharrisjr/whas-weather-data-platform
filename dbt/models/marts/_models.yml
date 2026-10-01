@@ -64,8 +64,16 @@ models:
   - name: fct_daily_forecast_observation
     description: Daily weather forecast and observation.
     columns:
-      - name: calendar_date_key
-        description: Calendar date foreign, smart key.
+      - name: issuance_date_key
+        description: Issuance date foreign, smart key.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: calendar_date_key
+      - name: valid_date_key
+        description: Valid date foreign, smart key.
         tests:
           - not_null
           - relationships:
@@ -100,8 +108,16 @@ models:
   - name: fct_hourly_forecast_observation
     description: Hourly weather forecast and observation.
     columns:
-      - name: calendar_date_key
-        description: Calendar date foreign, smart key.
+      - name: issuance_date_key
+        description: Issuance date foreign, smart key.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: calendar_date_key
+      - name: valid_date_key
+        description: Valid date foreign, smart key.
         tests:
           - not_null
           - relationships:
@@ -124,9 +140,16 @@ models:
         description: Observed temperature in Fahrenheit.
         tests:
           - not_null
-      - name: hour_key
-        description: Hour foreign, smart key.
+      - name: issuance_hour_key
+        description: Issuance hour foreign, smart key.
         tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_time_hourly')
+                field: hour_key
+      - name: valid_hour_key
+        description: Valid hour foreign, smart key.
           - not_null
           - relationships:
               arguments:
