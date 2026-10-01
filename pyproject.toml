@@ -35,7 +35,7 @@ dbt = [
 ]
 
 [tool.sqlfluff.core]
-dialect = "hive"
+dialect = "athena"
 templater = "jinja"
 
 [tool.sqlfluff.templater.jinja]

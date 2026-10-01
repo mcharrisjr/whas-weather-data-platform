@@ -1,6 +1,66 @@
 version: 2
 
 models:
+  - name: dim_date
+    description: Calendar date.
+    columns:
+      - name: calendar_date_key
+        description: Calendar date primary, smart key.
+        tests:
+          - unique
+          - not_null
+      - name: calendar_date
+        description: Calendar date.
+        tests:
+          - not_null
+      - name: calendar_year
+        description: Calendar year.
+        tests:
+          - not_null
+      - name: calendar_month
+        description: Calendar month.
+        tests:
+          - not_null
+      - name: calendar_month_name
+        description: Calendar month name.
+        tests:
+          - not_null
+      - name: calendar_month_name_short
+        description: Calendar month short name.
+        tests:
+          - not_null
+      - name: season
+        description: Season.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [Winter, Spring, Summer, Fall]
+
+  - name: dim_time_hourly
+    description: Hourly time.
+    columns:
+      - name: hour_key
+        description: Hour primary, smart key.
+        tests:
+          - unique
+          - not_null
+      - name: time_of_day
+        description: Time of day.
+        tests:
+          - not_null
+      - name: hour_24
+        description: Hour number.
+        tests:
+          - unique
+          - not_null
+      - name: part_of_day
+        description: Part of day.
+        tests:
+          - accepted_values:
+              arguments:
+                values: [Morning, Afternoon, Evening, Night]
+
   - name: fct_hourly_forecast_accuracy_by_horizon
     description: Hourly weather forecast accuracy by forecast horizon.
     columns:
