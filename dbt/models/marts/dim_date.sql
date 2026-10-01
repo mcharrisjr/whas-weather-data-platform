@@ -1,5 +1,5 @@
 WITH date_spine AS (
-    SELECT t.calendar_date
+    SELECT CAST(t.calendar_date AS DATE) AS calendar_date
     FROM
         UNNEST(
             SEQUENCE(DATE '2026-01-01', DATE '2030-01-01', INTERVAL '1' DAY)
