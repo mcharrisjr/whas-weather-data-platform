@@ -1,15 +1,13 @@
 WITH time_spine AS (
-    SELECT time_raw
-    FROM (
-        SELECT time_raw
-        FROM UNNEST(
+    SELECT t.time_raw
+    FROM
+        UNNEST(
             SEQUENCE(
                 CAST('2026-01-01 00:00:00' AS TIMESTAMP),
                 CAST('2026-01-01 23:00:00' AS TIMESTAMP),
                 INTERVAL '1' HOUR
             )
-        )
-    ) AS t
+        ) AS t (time_raw)
 ),
 
 final AS (

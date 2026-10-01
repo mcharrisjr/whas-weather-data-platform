@@ -69,8 +69,9 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_date')
-              field: calendar_date_key
+              arguments:
+                to: ref('dim_date')
+                field: calendar_date_key
       - name: forecast_date
         description: Forecast date.
         tests:
@@ -104,8 +105,9 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_date')
-              field: calendar_date_key
+              arguments:
+                to: ref('dim_date')
+                field: calendar_date_key
       - name: forecasted_for
         description: Forecasted for datetime.
         tests:
@@ -127,5 +129,6 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_time_hourly')
-              field: hour_key
+              arguments:
+                to: ref('dim_time_hourly')
+                field: hour_key
