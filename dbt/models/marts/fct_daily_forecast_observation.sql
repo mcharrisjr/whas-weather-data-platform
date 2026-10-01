@@ -10,8 +10,8 @@ WITH daily_observation AS (
 SELECT
     CAST(FORMAT_DATETIME(f.forecast_date, 'yyyyMMdd') AS INT)
         AS calendar_date_key,
-    f.forecast_date,
-    o.observation_date,
+    f.scraped_date AS issue_date,
+    f.forecast_date AS valid_date,
     f.high_temperature_f AS forecasted_high_temp_f,
     o.high_temperature_f AS observed_high_temp_f,
     f.low_temperature_f AS forecasted_low_temp_f,

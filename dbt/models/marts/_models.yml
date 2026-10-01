@@ -72,12 +72,12 @@ models:
               arguments:
                 to: ref('dim_date')
                 field: calendar_date_key
-      - name: forecast_date
-        description: Forecast date.
+      - name: issue_date
+        description: Date at which forecast was issued.
         tests:
           - not_null
-      - name: observation_date
-        description: Observation date.
+      - name: valid_date
+        description: Date at which forecast is valid.
         tests:
           - not_null
       - name: forecasted_high_temp_f
@@ -108,12 +108,12 @@ models:
               arguments:
                 to: ref('dim_date')
                 field: calendar_date_key
-      - name: forecasted_for
-        description: Forecasted for datetime.
+      - name: issued_at
+        description: Timestamp at which forecast was issued.
         tests:
           - not_null
-      - name: observed_at
-        description: Observed at datetime.
+      - name: valid_for
+        description: Timestamp at which forecast is valid.
         tests:
           - not_null
       - name: forecasted_temp_f

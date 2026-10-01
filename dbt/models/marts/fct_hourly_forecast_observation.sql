@@ -1,8 +1,8 @@
 SELECT
     CAST(FORMAT_DATETIME(f.forecasted_for, 'yyyyMMdd') AS INT)
         AS calendar_date_key,
-    f.forecasted_for,
-    o.observed_at,
+    f.scraped_at AS issued_at,
+    f.forecasted_for AS valid_for,
     f.temperature_f AS forecasted_temp_f,
     o.temperature_f AS observed_temp_f,
     EXTRACT(HOUR FROM f.forecasted_for) AS hour_key
