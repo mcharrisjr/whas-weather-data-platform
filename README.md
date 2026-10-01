@@ -70,7 +70,6 @@ flowchart TD
 | Raw partition key(s) | `scraped_date` for forecasted weather and `observation_date` for observed weather. | Optimizes scanning by Athena downstream.
 | Raw data types for date and time data | String | Enforce predictable JSON serialization upstream (ISO format) and allow downstream tables to handle type conversion. This separation of responsibilities is important due to differences in serialization between systems.
 | Downstream partition key(s) | None | Avoids the "small file problem" for data at this scale.
-| Intermediate table materialization | View | Table transformations are not too computationally expensive.
 | Fact table materialization | Table | Persist in physical storage to decrease latency for analytical queries.
 | Fact table type | Apache Iceberg | Automatically discovers new upstream partitions.
 | Data integrity | Pydantic and dbt tests | Former makes format of scrape data predictable and consistent. Latter validates downstream SQL transformations.

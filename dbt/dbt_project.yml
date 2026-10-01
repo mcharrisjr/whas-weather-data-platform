@@ -18,10 +18,6 @@ models:
       +schema: whas_weather_staging
       +materialized: view
 
-    intermediate:
-      +schema: whas_weather_intermediate
-      +materialized: view
-
     marts:
       +schema: whas_weather_mart
       +materialized: table

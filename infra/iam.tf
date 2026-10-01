@@ -80,11 +80,9 @@ data "aws_iam_policy_document" "dbt_build" {
       "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:catalog",
       "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:database/${aws_glue_catalog_database.databases["raw"].name}",
       "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:database/${aws_glue_catalog_database.databases["staging"].name}",
-      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:database/${aws_glue_catalog_database.databases["intermediate"].name}",
       "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:database/${aws_glue_catalog_database.databases["mart"].name}",
       "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.databases["raw"].name}/*",
       "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.databases["staging"].name}/*",
-      "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.databases["intermediate"].name}/*",
       "arn:aws:glue:${local.aws_region}:${local.aws_account_id}:table/${aws_glue_catalog_database.databases["mart"].name}/*",
     ]
   }

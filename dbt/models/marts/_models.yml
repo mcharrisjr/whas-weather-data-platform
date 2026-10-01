@@ -61,76 +61,71 @@ models:
               arguments:
                 values: [Morning, Afternoon, Evening, Night]
 
-  - name: fct_hourly_forecast_accuracy_by_horizon
-    description: Hourly weather forecast accuracy by forecast horizon.
+  - name: fct_daily_forecast_observation
+    description: Daily weather forecast and observation.
     columns:
-      - name: forecast_horizon_hours
-        description: Forecast horizon in hours.
-        tests:
-          - unique
-          - not_null
-      - name: avg_residual_temperature_f
-        description: Average residual temperature in Fahrenheit.
+      - name: calendar_date_key
+        description: Calendar date foreign, smart key.
         tests:
           - not_null
-      - name: max_residual_temperature_f
-        description: Max residual temperature in Fahrenheit.
+          - relationships:
+              to: ref('dim_date')
+              field: calendar_date_key
+      - name: forecast_date
+        description: Forecast date.
         tests:
           - not_null
-      - name: avg_abs_error_temperature_f
-        description: Average absolute error of temperature forecast in Fahrenheit.
+      - name: observation_date
+        description: Observation date.
         tests:
           - not_null
-      - name: max_abs_error_temperature_f
-        description: Max absolute error of temperature forecast in Fahrenheit.
+      - name: forecasted_high_temp_f
+        description: Forecasted high temperature in Fahrenheit.
         tests:
           - not_null
-      - name: number_of_samples
-        description: Number of samples.
+      - name: observed_high_temp_f
+        description: Observed high temperature in Fahrenheit.
+        tests:
+          - not_null
+      - name: forecasted_low_temp_f
+        description: Forecasted low temperature in Fahrenheit.
+        tests:
+          - not_null
+      - name: observed_low_temp_f
+        description: Observed low temperature in Fahrenheit.
         tests:
           - not_null
 
-  - name: fct_daily_forecast_accuracy_by_horizon
-    description: Daily weather forecast accuracy by forecast horizon.
+  - name: fct_hourly_forecast_observation
+    description: Hourly weather forecast and observation.
     columns:
-      - name: forecast_horizon_days
-        description: Forecast horizon in days.
-        tests:
-          - unique
-          - not_null
-      - name: avg_residual_high_temperature_f
-        description: Average residual high temperature in Fahrenheit.
+      - name: calendar_date_key
+        description: Calendar date foreign, smart key.
         tests:
           - not_null
-      - name: max_residual_high_temperature_f
-        description: Max residual high temperature in Fahrenheit.
+          - relationships:
+              to: ref('dim_date')
+              field: calendar_date_key
+      - name: forecasted_for
+        description: Forecasted for datetime.
         tests:
           - not_null
-      - name: avg_residual_low_temperature_f
-        description: Average residual low temperature in Fahrenheit.
+      - name: observed_at
+        description: Observed at datetime.
         tests:
           - not_null
-      - name: max_residual_low_temperature_f
-        description: Max residual low temperature in Fahrenheit.
+      - name: forecasted_temp_f
+        description: Forecasted temperature in Fahrenheit.
         tests:
           - not_null
-      - name: avg_abs_error_high_temperature_f
-        description: Average absolute error of high temperature forecast in Fahrenheit.
+      - name: observed_temp_f
+        description: Observed temperature in Fahrenheit.
         tests:
           - not_null
-      - name: max_abs_error_high_temperature_f
-        description: Max absolute error of high temperature forecast in Fahrenheit.
+      - name: hour_key
+        description: Hour foreign, smart key.
         tests:
           - not_null
-      - name: avg_abs_error_low_temperature_f
-        description: Average absolute error of low temperature forecast in Fahrenheit.
-        tests:
-          - not_null
-      - name: max_abs_error_low_temperature_f
-        description: Max absolute error of low temperature forecast in Fahrenheit.
-        tests:
-          - not_null
-      - name: number_of_samples
-        description: Number of samples.
-        tests:
-          - not_null
+          - relationships:
+              to: ref('dim_time_hourly')
+              field: hour_key

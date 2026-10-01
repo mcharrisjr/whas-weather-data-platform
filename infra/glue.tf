@@ -2,7 +2,6 @@ locals {
   databases = {
     raw          = { name = "${local.project_slug}_raw" }
     staging      = { name = "${local.project_slug}_staging" }
-    intermediate = { name = "${local.project_slug}_intermediate" }
     mart         = { name = "${local.project_slug}_mart" }
   }
 
