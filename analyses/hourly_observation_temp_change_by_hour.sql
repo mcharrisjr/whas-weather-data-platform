@@ -12,7 +12,8 @@ hourly_observation_with_temp_change AS (
         valid_hour_key,
         observed_at,
         observed_temp_f,
-        observed_temp_f - LAG(observed_temp_f) OVER (ORDER BY observed_at) AS temp_change
+        observed_temp_f
+        - LAG(observed_temp_f) OVER (ORDER BY observed_at) AS temp_change
     FROM deduplicated_hourly_observation
 )
 
