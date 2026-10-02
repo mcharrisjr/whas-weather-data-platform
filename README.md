@@ -77,6 +77,13 @@ flowchart TD
 | Raw partition discovery | `MSCK REPAIR TABLE` Step Function state | Ensures up-to-date data downstream automatically.
 | Compute | AWS ECS Fargate | Runs containerized workloads and scales automatically. |
 
+## Analyses
+
+| Business Question | Related Query | Answer |
+| ----------------- | ------------- | ------ |
+| How accurate are hourly weather forecasts across the relevant forecast horizons? | `hourly_forecast_error_metrics_by_lead_hour.sql`(analyses/hourly_forecast_error_metrics_by_lead_hour.sql) | Hourly weather forecasts are most accurate at the tail forecast horizons such as 1 hour or 11 hours, but least accurate towards the middle forecast horizons such as 4 hours or 5 hours. Forecasts tend to under forecast by approximately 1 or 2 degrees. Surprisingly, hourly weather forecasts 11 hours out _may_ be better than forecasts 5, 4, or even 3 hours out.
+| How accurate are daily weather forecasts across the relevant forecast horizons? | `daily_forecast_error_metrics_by_lead_hour.sql(analyses/daily_forecast_error_metrics_by_lead_hour.sql) | Unsuprisingly, daily weather forecasts are more accurate the shorter the forecast horizon for both high and low temperatures. Again, forecasts tend to under forecast, but even more so for the forecasted low temperature. Forecasted low temperatures _may_ be around 10 degrees shy of the actual low temperature at a 5 day forecast horizon. These conclusions could change with more samples.
+| How much does temperature change from hour to hour? | `hourly_observation_temp_change_by_hour.sql`(analyses/hourly_observation_temp_change_by_hour.sql) | Temperature changes the most late at night (hours 23-2 ET) and in the late afternoon (hours 14-16 ET). Temperature changes the least around noon.
 
 ## Infrastructure
 
