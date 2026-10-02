@@ -22,7 +22,8 @@ error_metrics_by_lead_day AS (
         AVG(POWER(high_temp_signed_error, 2)) AS high_temp_mse,
         AVG(POWER(low_temp_signed_error, 2)) AS low_temp_mse,
         AVG(high_temp_abs_error) AS high_temp_mae,
-        AVG(low_temp_abs_error) AS low_temp_mae
+        AVG(low_temp_abs_error) AS low_temp_mae,
+        COUNT(*) AS number_of_samples
     FROM daily_forecast_error
     GROUP BY 1
 )

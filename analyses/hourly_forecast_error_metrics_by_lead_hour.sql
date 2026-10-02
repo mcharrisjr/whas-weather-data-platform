@@ -14,13 +14,14 @@ error_metrics_by_lead_hour AS (
         DATE_DIFF('hour', issued_at_et, valid_for_et) AS lead_hours,
         AVG(signed_error) AS temp_bias,
         AVG(POWER(signed_error, 2)) AS temp_mse,
-        AVG(abs_error) AS temp_mae
+        AVG(abs_error) AS temp_mae,
+        COUNT(*) AS number_of_samples
     FROM hourly_forecast_error
     GROUP BY 1
 )
 
 SELECT
     *,
-    SQRT(mse) AS temp_rmse
+    SQRT(temp_mse) AS temp_rmse
 FROM error_metrics_by_lead_hour
 WHERE lead_hours > 0
