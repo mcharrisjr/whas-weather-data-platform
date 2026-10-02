@@ -1,9 +1,9 @@
 WITH hourly_forecast_error AS (
     SELECT
-        issued_at,
-        valid_for,
         forecasted_temp_f,
         observed_temp_f,
+        issued_at AT TIME ZONE 'America/New_York' AS issued_at_et,
+        valid_for AT TIME ZONE 'America/New_York' AS valid_for_et,
         forecasted_temp_f - observed_temp_f AS signed_error,
         ABS(forecasted_temp_f - observed_temp_f) AS abs_error
     FROM fct_hourly_forecast_observation
@@ -11,7 +11,7 @@ WITH hourly_forecast_error AS (
 
 error_metrics_by_lead_hour AS (
     SELECT
-        DATE_DIFF('hour', issued_at, valid_for) AS lead_hours,
+        DATE_DIFF('hour', issued_at_et, valid_for_et) AS lead_hours,
         AVG(signed_error) AS bias,
         AVG(POWER(signed_error, 2)) AS mse,
         AVG(abs_error) AS mae
