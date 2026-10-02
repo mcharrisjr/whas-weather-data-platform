@@ -72,7 +72,7 @@ flowchart TD
 | Downstream partition key(s) | None | Avoids the "small file problem" for data at this scale.
 | Fact table materialization | Table | Persist in physical storage to decrease latency for analytical queries.
 | Fact table type | Apache Iceberg | Automatically discovers new upstream partitions.
-| Data integrity | Pydantic and dbt tests | Former makes format of scrape data predictable and consistent. Latter validates downstream SQL transformations.
+| Data integrity | Pydantic and dbt tests | The former makes format of scraped data predictable and consistent. The latter validates downstream SQL transformations.
 | Orchestration | AWS Step Functions | Sequences ingestion and transformation. Managed Workflows for Apache Airflow (MWAA) is a more costly and complex alternative. |
 | Raw partition discovery | `MSCK REPAIR TABLE` Step Function state | Ensures up-to-date data downstream automatically.
 | Compute | AWS ECS Fargate | Runs containerized workloads and scales automatically. |
