@@ -53,14 +53,6 @@ flowchart TD
         RepairDailyForecastTable --> D_DbtBuild[Dbt Build - ECS Task]
         D_DbtBuild --> D_End([End])
     end
-
-    classDef ecs fill:#FF9900,stroke:#D68100,stroke-width:2px,color:#FFF;
-    classDef athena fill:#3182CE,stroke:#2B6CB0,stroke-width:2px,color:#FFF;
-    classDef terminal fill:#2F855A,stroke:#22543D,stroke-width:2px,color:#FFF;
-
-    class H_Start,H_End,D_Start,D_End terminal;
-    class ScrapeHourlyForecast,ScrapeHourlyObservation,H_DbtBuild,ScrapeDailyForecast,D_DbtBuild ecs;
-    class RepairHourlyForecastTable,RepairHourlyObservationTable,RepairDailyForecastTable athena;
 ```
 
 ## Key Design Decisions
