@@ -12,15 +12,15 @@ WITH hourly_forecast_error AS (
 error_metrics_by_lead_hour AS (
     SELECT
         DATE_DIFF('hour', issued_at_et, valid_for_et) AS lead_hours,
-        AVG(signed_error) AS bias,
-        AVG(POWER(signed_error, 2)) AS mse,
-        AVG(abs_error) AS mae
+        AVG(signed_error) AS temp_bias,
+        AVG(POWER(signed_error, 2)) AS temp_mse,
+        AVG(abs_error) AS temp_mae
     FROM hourly_forecast_error
     GROUP BY 1
 )
 
 SELECT
     *,
-    SQRT(mse) AS rmse
+    SQRT(mse) AS temp_rmse
 FROM error_metrics_by_lead_hour
 WHERE lead_hours > 0
