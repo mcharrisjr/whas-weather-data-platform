@@ -20,7 +20,6 @@ This data platform scrapes hourly weather forecasts and observations, and daily 
 ## Data Pipelines
 
 ```mermaid
-%%{init: {'theme': 'neutral'}}%%
 flowchart TD
 
     subgraph Hourly_Pipeline [Hourly Data Pipeline]
